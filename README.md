@@ -1,6 +1,22 @@
 # Angular Starter Kit
 
-This is a production-ready, enterprise-grade Angular 17 base project tailored for large, high-traffic web applications. The project is modular, scalable, maintainable, and optimized for performance and developer experience.
+This is a production-ready, enterprise-grade Angular 17.3.x base project tailored for large, high-traffic web applications. Developed by Prosigns, this starter kit is modular, scalable, maintainable, and optimized for performance and developer experience. Developed by [Prosigns](https://www.prosignstech.com/).
+
+## About Prosigns
+
+Prosigns Technologies is a leading provider of custom software development services in the USA, Canada, and Middle East. With a team of 135+ tech innovators, Prosigns specializes in:
+
+- Business Enablement: Strategic solutions that drive operational efficiency and market expansion
+- Artificial Intelligence: Turning data into actionable insights and competitive advantage
+- Digital Transformation: Empowering businesses to thrive in the digital era
+- Engineering: Precision-driven solutions for seamless performance and scalability
+
+Prosigns offers services across diverse industries including SaaS, Healthcare, Finance, Oil and Gas, Logistics, Real Estate, and more. The company is dedicated to delivering high-quality, tailored tech solutions that strengthen core business functions and unlock new digital possibilities.
+
+For more information, visit [prosignstech.com](https://www.prosignstech.com/) or contact them at:
+
+- Email: services@prosignstech.com
+- US: +1 469 663 3444
 
 ## 🧱 Project Structure & Architecture
 
@@ -11,6 +27,7 @@ This is a production-ready, enterprise-grade Angular 17 base project tailored fo
 
 ## 🚀 Key Features
 
+- **Progressive Web App (PWA)** support with offline capabilities and installable experience
 - **Server-side rendering** with Angular Universal
 - **Intelligent preloading strategies** for optimal loading experience
 - **RxJS best practices** with takeUntil pattern, shareReplay, etc.
@@ -30,13 +47,14 @@ This is a production-ready, enterprise-grade Angular 17 base project tailored fo
 
 ## 🛠️ Technology Stack
 
-- Angular 17.x
-- TypeScript 5.x
-- RxJS 7.x
+- Angular 17.3.x
+- TypeScript 5.4.x
+- RxJS 7.8.x
 - NgRx 17.x
 - Standalone Components
 - Signals API
 - SSR with Angular Universal
+- PWA capabilities
 - TailwindCSS / Custom UI Components
 - ESLint + Prettier
 - Husky + lint-staged
@@ -85,8 +103,8 @@ src/
 
 ### Prerequisites
 
-- Node.js 18.x or higher
-- npm 9.x or higher
+- Node.js 20.x or higher
+- npm 10.x or higher
 
 ### Installation
 
@@ -109,18 +127,25 @@ npm start
 - `npm run build:staging` - Build for staging environment
 - `npm run build:ssr` - Build for server-side rendering
 - `npm run dev:ssr` - Start SSR development server
+- `npm run serve:ssr` - Serve SSR build
+- `npm run prerender` - Prerender static pages
 - `npm test` - Run tests
 - `npm run test:ci` - Run tests in CI mode
 - `npm run lint` - Run linting
 - `npm run lint:fix` - Fix linting issues
 - `npm run format` - Format code with Prettier
 - `npm run storybook` - Start Storybook development server
+- `npm run analyze` - Analyze bundle size
 
 ## 🔧 Configuration
 
 ### Environment Variables
 
 The application supports multiple environments: `development`, `staging`, and `production`. Environment files are located in the `src/environments/` directory.
+
+### PWA Configuration
+
+The Progressive Web App configuration is managed through the `ngsw-config.json` file in the root directory. It defines caching strategies, installable behavior, and offline capabilities.
 
 ### i18n Configuration
 
@@ -183,3 +208,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [NgRx](https://ngrx.io/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [ngx-translate](http://www.ngx-translate.com/)
+- [Prosigns](https://prosigns.dev) - Creator of this starter kit
