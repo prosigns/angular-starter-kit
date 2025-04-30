@@ -1,4 +1,4 @@
-# Angular Starter Kit
+# Angular 17 Starter Kit
 
 This is a production-ready, enterprise-grade Angular 17.3.x base project tailored for large, high-traffic web applications. Developed by Prosigns, this starter kit is modular, scalable, maintainable, and optimized for performance and developer experience. Developed by [Prosigns](https://www.prosignstech.com/).
 
