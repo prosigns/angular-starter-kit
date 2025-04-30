@@ -1,0 +1,144 @@
+{
+  "app": {
+    "name": "Angular Starter Kit",
+    "version": "1.0.0"
+  },
+  "common": {
+    "loadingText": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "search": "Search",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "home": {
+    "title": "Enterprise-Ready Angular Starter Kit",
+    "subtitle": "Build high-performance, scalable applications with our production-ready Angular framework",
+    "loginButton": "Log In",
+    "registerButton": "Create Account",
+    "features": {
+      "title": "Key Features",
+      "performance": {
+        "title": "Performance Optimized",
+        "description": "Built with best practices for optimal loading and runtime performance"
+      },
+      "security": {
+        "title": "Enterprise-Grade Security",
+        "description": "JWT authentication, route guards, and robust security protections"
+      },
+      "responsive": {
+        "title": "Responsive Design",
+        "description": "Fully responsive interface that works beautifully on any device"
+      },
+      "i18n": {
+        "title": "Internationalization",
+        "description": "Full support for multiple languages and easy translation management"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "subtitle": "Enter your credentials to access your account",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Log In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up",
+      "errors": {
+        "invalidCredentials": "Invalid email or password",
+        "emailRequired": "Email is required",
+        "validEmail": "Please enter a valid email",
+        "passwordRequired": "Password is required"
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Fill in your details to create a new account",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "termsConditions": "I agree to the Terms and Conditions",
+      "registerButton": "Create Account",
+      "haveAccount": "Already have an account?",
+      "logIn": "Log in",
+      "errors": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "emailRequired": "Email is required",
+        "validEmail": "Please enter a valid email",
+        "passwordRequired": "Password is required",
+        "passwordPattern": "Password must be at least 8 characters long and include letters, numbers, and special characters",
+        "passwordMismatch": "Passwords do not match",
+        "termsRequired": "You must agree to the terms and conditions"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your email address to reset your password",
+      "emailLabel": "Email",
+      "submitButton": "Send Reset Link",
+      "backToLogin": "Back to Login",
+      "emailSent": "Password reset link has been sent to your email"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "subtitle": "Create a new password for your account",
+      "newPasswordLabel": "New Password",
+      "confirmPasswordLabel": "Confirm Password",
+      "submitButton": "Reset Password",
+      "passwordReset": "Your password has been reset successfully",
+      "loginNow": "Login Now"
+    }
+  },
+  "dashboard": {
+    "greeting": "Welcome, {{name}}",
+    "quickLinks": "Quick Links",
+    "statistics": "Statistics",
+    "recentActivity": "Recent Activity",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log Out"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for does not exist or has been moved.",
+    "backToHome": "Go to Homepage",
+    "contactSupport": "Contact Support"
+  },
+  "footer": {
+    "copyright": "© {{year}} Angular Starter Kit. All rights reserved.",
+    "links": {
+      "title": "Links",
+      "about": "About",
+      "contact": "Contact",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "systemTheme": "System Theme"
+  },
+  "errors": {
+    "general": "An unexpected error occurred. Please try again.",
+    "connectionError": "Could not connect to the server. Please check your internet connection.",
+    "notFound": "The requested resource was not found.",
+    "forbidden": "You do not have permission to access this resource.",
+    "serverError": "Server error. Our team has been notified."
+  }
+} 
