@@ -208,4 +208,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [NgRx](https://ngrx.io/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [ngx-translate](http://www.ngx-translate.com/)
-- [Prosigns](https://prosigns.dev) - Creator of this starter kit
+- [Prosigns](https://prosignstech.com) - Creator of this starter kit
