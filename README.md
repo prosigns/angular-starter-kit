@@ -110,7 +110,7 @@ src/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/angular-starter-kit.git
+git clone https://github.com/prosigns/angular-starter-kit.git
 cd angular-starter-kit
 
 # Install dependencies
