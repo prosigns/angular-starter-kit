@@ -15,7 +15,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const message = error.message || 'Undefined error';
     const stack = error.stack || '';
     const isNetworkError = error instanceof TypeError && error.message.includes('NetworkError');
-    
+
     // Log error to monitoring service
     this.loggingService.logError(message, { stack, error });
 
@@ -29,9 +29,9 @@ export class GlobalErrorHandler implements ErrorHandler {
 
       // For critical errors, navigate to error page
       if (this.isCriticalError(error)) {
-        this.router.navigate(['/error'], { 
-          queryParams: { 
-            id: this.loggingService.getLastErrorId() 
+        this.router.navigate(['/error'], {
+          queryParams: {
+            id: this.loggingService.getLastErrorId()
           }
         });
       }
@@ -44,18 +44,18 @@ export class GlobalErrorHandler implements ErrorHandler {
   private isCriticalError(error: any): boolean {
     // Determine if this is a critical error that should redirect to error page
     const criticalErrorPatterns = [
-      'ChunkLoadError',        // Failed to load a critical JS chunk
-      'ReferenceError',        // Undefined variables, missing references
-      'TypeError',             // Type errors, typically null or undefined issues
-      'ResizeObserver loop',   // Infinite loop in ResizeObserver
-      'Maximum update depth'   // React-like recursive rendering error
+      'ChunkLoadError', // Failed to load a critical JS chunk
+      'ReferenceError', // Undefined variables, missing references
+      'TypeError', // Type errors, typically null or undefined issues
+      'ResizeObserver loop', // Infinite loop in ResizeObserver
+      'Maximum update depth' // React-like recursive rendering error
     ];
 
     if (!error) return false;
 
     // Check if error message contains any critical patterns
-    return criticalErrorPatterns.some(pattern => 
-      error.message?.includes(pattern) || error.stack?.includes(pattern)
+    return criticalErrorPatterns.some(
+      pattern => error.message?.includes(pattern) || error.stack?.includes(pattern)
     );
   }
-} 
+}

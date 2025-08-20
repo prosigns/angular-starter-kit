@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'app-admin-settings',
-    imports: [ReactiveFormsModule],
-    template: `
+  selector: 'app-admin-settings',
+  imports: [ReactiveFormsModule],
+  template: `
     <div class="settings-container">
       <h1>Admin Settings</h1>
 
@@ -54,8 +54,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
       </form>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .settings-container {
         max-width: 800px;
         margin: 0 auto;
@@ -124,7 +124,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
         cursor: not-allowed;
       }
     `
-    ]
+  ]
 })
 export class AdminSettingsComponent {
   settingsForm: FormGroup;

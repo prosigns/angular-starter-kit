@@ -3,9 +3,9 @@ import { Component, inject } from '@angular/core';
 import { LoaderService } from '../../../core/services/loader.service';
 
 @Component({
-    selector: 'app-loader',
-    imports: [],
-    template: `
+  selector: 'app-loader',
+  imports: [],
+  template: `
     @if (loaderService.isLoading()) {
       <div class="loader-container">
         <div class="loader-backdrop"></div>
@@ -19,76 +19,80 @@ import { LoaderService } from '../../../core/services/loader.service';
               stroke-width="8"
               stroke-linecap="round"
               class="loader-spinner-path"
-              />
-            </svg>
-            <div class="loader-text">{{ loaderService.loadingMessage() }}</div>
-          </div>
+            />
+          </svg>
+          <div class="loader-text">{{ loaderService.loadingMessage() }}</div>
         </div>
+      </div>
+    }
+  `,
+  styles: [
+    `
+      .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
-    `,
-    styles: [`
-    .loader-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 10000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .loader-backdrop {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(2px);
-    }
-    
-    .loader-spinner {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background-color: white;
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      color: #3b82f6;
-      z-index: 1;
-    }
-    
-    :host-context(.dark) .loader-spinner {
-      background-color: #1f2937;
-      color: #60a5fa;
-    }
-    
-    .loader-spinner-path {
-      animation: loader-spin 1s linear infinite;
-      transform-origin: center;
-    }
-    
-    .loader-text {
-      margin-top: 1rem;
-      font-size: 0.875rem;
-      text-align: center;
-    }
-    
-    @keyframes loader-spin {
-      from {
-        transform: rotate(0deg);
+
+      .loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(2px);
       }
-      to {
-        transform: rotate(360deg);
+
+      .loader-spinner {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        color: #3b82f6;
+        z-index: 1;
       }
-    }
-  `]
+
+      :host-context(.dark) .loader-spinner {
+        background-color: #1f2937;
+        color: #60a5fa;
+      }
+
+      .loader-spinner-path {
+        animation: loader-spin 1s linear infinite;
+        transform-origin: center;
+      }
+
+      .loader-text {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        text-align: center;
+      }
+
+      @keyframes loader-spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    `
+  ]
 })
 export class LoaderComponent {
   loaderService = inject(LoaderService);
-} 
+}

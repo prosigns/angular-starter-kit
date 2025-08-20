@@ -30,33 +30,33 @@ export interface LogEntry {
 export class LoggingService {
   private readonly API_URL = `${environment.apiUrl}/logs`;
   private lastErrorId: string | null = null;
-  
-  constructor(private http: HttpClient) { }
-  
+
+  constructor(private http: HttpClient) {}
+
   debug(message: string, data?: any): void {
     this.log(LogLevel.DEBUG, message, data);
   }
-  
+
   info(message: string, data?: any): void {
     this.log(LogLevel.INFO, message, data);
   }
-  
+
   warn(message: string, data?: any): void {
     this.log(LogLevel.WARN, message, data);
   }
-  
+
   error(message: string, data?: any): void {
     this.log(LogLevel.ERROR, message, data);
   }
-  
+
   fatal(message: string, data?: any): void {
     this.log(LogLevel.FATAL, message, data);
   }
-  
+
   logError(message: string, error?: any): string {
     const errorId = this.generateErrorId();
     this.lastErrorId = errorId;
-    
+
     const logEntry: LogEntry = {
       timestamp: new Date().toISOString(),
       level: LogLevel.ERROR,
@@ -66,24 +66,24 @@ export class LoggingService {
       userAgent: navigator.userAgent,
       errorId
     };
-    
+
     // Only send to server in production
     if (environment.production) {
       this.sendToServer(logEntry).subscribe();
     }
-    
+
     // Always log to console in development
     if (!environment.production) {
       console.error(`[ERROR] ${message}`, error);
     }
-    
+
     return errorId;
   }
-  
+
   getLastErrorId(): string | null {
     return this.lastErrorId;
   }
-  
+
   private log(level: LogLevel, message: string, data?: any): void {
     const logEntry: LogEntry = {
       timestamp: new Date().toISOString(),
@@ -93,20 +93,24 @@ export class LoggingService {
       url: window.location.href,
       userAgent: navigator.userAgent
     };
-    
+
     // Only send INFO and higher to server in production
-    if (environment.production && 
-        (level === LogLevel.INFO || level === LogLevel.WARN || 
-         level === LogLevel.ERROR || level === LogLevel.FATAL)) {
+    if (
+      environment.production &&
+      (level === LogLevel.INFO ||
+        level === LogLevel.WARN ||
+        level === LogLevel.ERROR ||
+        level === LogLevel.FATAL)
+    ) {
       this.sendToServer(logEntry).subscribe();
     }
-    
+
     // Always log to console in development
     if (!environment.production) {
       this.logToConsole(logEntry);
     }
   }
-  
+
   private sendToServer(logEntry: LogEntry): Observable<any> {
     return this.http.post(`${this.API_URL}`, logEntry).pipe(
       catchError(error => {
@@ -117,10 +121,10 @@ export class LoggingService {
       })
     );
   }
-  
+
   private logToConsole(logEntry: LogEntry): void {
     const { level, message, data } = logEntry;
-    
+
     switch (level) {
       case LogLevel.DEBUG:
         console.debug(`[DEBUG] ${message}`, data);
@@ -137,9 +141,9 @@ export class LoggingService {
         break;
     }
   }
-  
+
   private generateErrorId(): string {
     // Generate a random ID for error tracking
     return 'err_' + Math.random().toString(36).substring(2, 15);
   }
-} 
+}

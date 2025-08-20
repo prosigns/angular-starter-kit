@@ -1,4 +1,10 @@
-import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  ValidationErrors
+} from '@angular/forms';
 
 /**
  * Mark all form controls as touched to trigger validation messages
@@ -6,7 +12,7 @@ import { AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors } 
 export function markFormGroupTouched(formGroup: FormGroup | FormArray): void {
   Object.keys(formGroup.controls).forEach(key => {
     const control = formGroup.controls[key];
-    
+
     if (control instanceof FormControl) {
       control.markAsTouched();
     } else if (control instanceof FormGroup || control instanceof FormArray) {
@@ -39,7 +45,7 @@ export function validateForm(formGroup: FormGroup): boolean {
 export function getControlByPath(form: FormGroup, path: string): AbstractControl | null {
   const segments = path.split('.');
   let currentControl: AbstractControl = form;
-  
+
   for (const segment of segments) {
     if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
       currentControl = currentControl.get(segment) as AbstractControl;
@@ -48,7 +54,7 @@ export function getControlByPath(form: FormGroup, path: string): AbstractControl
       return null;
     }
   }
-  
+
   return currentControl;
 }
 
@@ -63,11 +69,11 @@ export function getAllErrors(
   if (!control) {
     return result;
   }
-  
+
   if (control.errors) {
     result[path] = control.errors;
   }
-  
+
   if (control instanceof FormGroup) {
     const controls = control.controls;
     Object.keys(controls).forEach(key => {
@@ -80,7 +86,7 @@ export function getAllErrors(
       getAllErrors(ctrl, result, childPath);
     });
   }
-  
+
   return result;
 }
 
@@ -104,4 +110,4 @@ export function passwordMatchValidator(controlName: string, matchingControlName:
       return null;
     }
   };
-} 
+}

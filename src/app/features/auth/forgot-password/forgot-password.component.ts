@@ -2,58 +2,49 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-
 @Component({
-    selector: 'app-forgot-password',
-    imports: [ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-forgot-password',
+  imports: [ReactiveFormsModule, RouterLink],
+  template: `
     <h2>Forgot Password</h2>
     <p class="description">
       Enter your email address and we'll send you a link to reset your password.
     </p>
-    
+
     <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
-        @if (
-          forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched
-          ) {
-          <div
-            class="error-message"
-            >
+        @if (forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched) {
+          <div class="error-message">
             @if (forgotPasswordForm.get('email')?.errors?.['required']) {
-              <span
-                >Email is required</span
-                >
-              }
-              @if (forgotPasswordForm.get('email')?.errors?.['email']) {
-                <span
-                  >Enter a valid email address</span
-                  >
-                }
-              </div>
+              <span>Email is required</span>
+            }
+            @if (forgotPasswordForm.get('email')?.errors?.['email']) {
+              <span>Enter a valid email address</span>
             }
           </div>
-    
-          <button type="submit" [disabled]="forgotPasswordForm.invalid">Send Reset Link</button>
-    
-          <div class="auth-links">
-            <p>
-              <a [routerLink]="['/auth/login']">Back to Login</a>
-            </p>
-          </div>
-        </form>
-    
-        @if (submitted) {
-          <div class="success-message">
-            <p>We've sent a password reset link to your email address.</p>
-            <p>Please check your inbox and follow the instructions to reset your password.</p>
-          </div>
         }
-    `,
-    styles: [
-        `
+      </div>
+
+      <button type="submit" [disabled]="forgotPasswordForm.invalid">Send Reset Link</button>
+
+      <div class="auth-links">
+        <p>
+          <a [routerLink]="['/auth/login']">Back to Login</a>
+        </p>
+      </div>
+    </form>
+
+    @if (submitted) {
+      <div class="success-message">
+        <p>We've sent a password reset link to your email address.</p>
+        <p>Please check your inbox and follow the instructions to reset your password.</p>
+      </div>
+    }
+  `,
+  styles: [
+    `
       h2 {
         text-align: center;
         margin-bottom: 16px;
@@ -121,7 +112,7 @@ import { Router, RouterLink } from '@angular/router';
         margin: 8px 0;
       }
     `
-    ]
+  ]
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;

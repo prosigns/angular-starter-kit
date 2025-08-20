@@ -2,37 +2,30 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-
 @Component({
-    selector: 'app-user-form',
-    imports: [ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-user-form',
+  imports: [ReactiveFormsModule, RouterLink],
+  template: `
     <div class="user-form-container">
       <h1>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h1>
-    
+
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="name">Full Name</label>
           <input type="text" id="name" formControlName="name" />
           @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
-            <div class="error">
-              Name is required
-            </div>
+            <div class="error">Name is required</div>
           }
         </div>
-    
+
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" formControlName="email" />
           @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
-            <div
-              class="error"
-              >
-              Valid email is required
-            </div>
+            <div class="error">Valid email is required</div>
           }
         </div>
-    
+
         <div class="form-group">
           <label for="role">Role</label>
           <select id="role" formControlName="role">
@@ -41,7 +34,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
             <option value="editor">Editor</option>
           </select>
         </div>
-    
+
         <div class="form-group">
           <label for="status">Status</label>
           <select id="status" formControlName="status">
@@ -50,16 +43,16 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
             <option value="pending">Pending</option>
           </select>
         </div>
-    
+
         <div class="form-actions">
           <button type="button" [routerLink]="['../..']">Cancel</button>
           <button type="submit" [disabled]="userForm.invalid">Save</button>
         </div>
       </form>
     </div>
-    `,
-    styles: [
-        `
+  `,
+  styles: [
+    `
       .user-form-container {
         max-width: 600px;
         margin: 0 auto;
@@ -108,7 +101,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
         background-color: #f5f5f5;
       }
     `
-    ]
+  ]
 })
 export class UserFormComponent {
   userForm: FormGroup;

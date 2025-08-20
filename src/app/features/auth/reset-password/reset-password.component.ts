@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-
 @Component({
-    selector: 'app-reset-password',
-    imports: [ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-reset-password',
+  imports: [ReactiveFormsModule, RouterLink],
+  template: `
     <h2>Reset Password</h2>
     @if (!submitted) {
       <p class="description">Please enter your new password below.</p>
     }
-    
+
     @if (!submitted) {
       <form [formGroup]="resetPasswordForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
@@ -21,81 +20,67 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
             id="password"
             formControlName="password"
             placeholder="Enter your new password"
-            />
-            @if (
-              resetPasswordForm.get('password')?.invalid && resetPasswordForm.get('password')?.touched
-              ) {
-              <div
-                class="error-message"
-                >
-                @if (resetPasswordForm.get('password')?.errors?.['required']) {
-                  <span
-                    >Password is required</span
-                    >
-                }
-                @if (resetPasswordForm.get('password')?.errors?.['minlength']) {
-                  <span>
-                    Password must be at least 8 characters
-                  </span>
-                }
-              </div>
-            }
-          </div>
-          <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              placeholder="Confirm your new password"
-              />
-              @if (
-                resetPasswordForm.get('confirmPassword')?.invalid &&
-                resetPasswordForm.get('confirmPassword')?.touched
-                ) {
-                <div
-                  class="error-message"
-                  >
-                  @if (resetPasswordForm.get('confirmPassword')?.errors?.['required']) {
-                    <span>
-                      Password confirmation is required
-                    </span>
-                  }
-                </div>
+          />
+          @if (
+            resetPasswordForm.get('password')?.invalid && resetPasswordForm.get('password')?.touched
+          ) {
+            <div class="error-message">
+              @if (resetPasswordForm.get('password')?.errors?.['required']) {
+                <span>Password is required</span>
               }
-              @if (
-                resetPasswordForm.errors?.['passwordMismatch'] &&
-                resetPasswordForm.get('confirmPassword')?.touched
-                ) {
-                <div
-                  class="error-message"
-                  >
-                  Passwords do not match
-                </div>
+              @if (resetPasswordForm.get('password')?.errors?.['minlength']) {
+                <span> Password must be at least 8 characters </span>
               }
             </div>
-            <button type="submit" [disabled]="resetPasswordForm.invalid">Reset Password</button>
-          </form>
-        }
-    
-        @if (submitted) {
-          <div class="success-message">
-            <p>Your password has been successfully reset!</p>
-            <p>You can now <a [routerLink]="['/auth/login']">log in</a> with your new password.</p>
-          </div>
-        }
-    
-        @if (invalidToken) {
-          <div class="error-box">
-            <p>The password reset link is invalid or has expired.</p>
-            <p>
-              Please request a new <a [routerLink]="['/auth/forgot-password']">password reset link</a>.
-            </p>
-          </div>
-        }
-    `,
-    styles: [
-        `
+          }
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirm your new password"
+          />
+          @if (
+            resetPasswordForm.get('confirmPassword')?.invalid &&
+            resetPasswordForm.get('confirmPassword')?.touched
+          ) {
+            <div class="error-message">
+              @if (resetPasswordForm.get('confirmPassword')?.errors?.['required']) {
+                <span> Password confirmation is required </span>
+              }
+            </div>
+          }
+          @if (
+            resetPasswordForm.errors?.['passwordMismatch'] &&
+            resetPasswordForm.get('confirmPassword')?.touched
+          ) {
+            <div class="error-message">Passwords do not match</div>
+          }
+        </div>
+        <button type="submit" [disabled]="resetPasswordForm.invalid">Reset Password</button>
+      </form>
+    }
+
+    @if (submitted) {
+      <div class="success-message">
+        <p>Your password has been successfully reset!</p>
+        <p>You can now <a [routerLink]="['/auth/login']">log in</a> with your new password.</p>
+      </div>
+    }
+
+    @if (invalidToken) {
+      <div class="error-box">
+        <p>The password reset link is invalid or has expired.</p>
+        <p>
+          Please request a new <a [routerLink]="['/auth/forgot-password']">password reset link</a>.
+        </p>
+      </div>
+    }
+  `,
+  styles: [
+    `
       h2 {
         text-align: center;
         margin-bottom: 16px;
@@ -168,7 +153,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
         text-decoration: none;
       }
     `
-    ]
+  ]
 })
 export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;

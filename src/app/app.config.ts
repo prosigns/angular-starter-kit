@@ -1,5 +1,16 @@
-import { ApplicationConfig, ErrorHandler, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withPreloading, withRouterConfig } from '@angular/router';
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  importProvidersFrom,
+  inject,
+  provideAppInitializer
+} from '@angular/core';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  withRouterConfig
+} from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -33,17 +44,15 @@ export const appConfig: ApplicationConfig = {
       withPreloading(CustomPreloadingStrategy),
       withRouterConfig({ paramsInheritanceStrategy: 'always' })
     ),
-    provideHttpClient(
-      withInterceptors([authInterceptor, errorInterceptor])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideAnimations(),
     provideClientHydration(),
     provideEnvironmentNgxMask(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideAppInitializer(() => {
-        const initializerFn = (initializeApp)(inject(AuthService));
-        return initializerFn();
-      }),
+      const initializerFn = initializeApp(inject(AuthService));
+      return initializerFn();
+    }),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
