@@ -7,12 +7,11 @@ import { ToastComponent } from './shared/components/toast/toast.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CommonModule, ToastComponent, LoaderComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-root',
+    imports: [RouterOutlet, CommonModule, ToastComponent, LoaderComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
   constructor(

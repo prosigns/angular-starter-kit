@@ -4,10 +4,9 @@ import { ToastService, ToastType } from '../../../core/services/toast.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-  selector: 'app-toast',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-toast',
+    imports: [CommonModule],
+    template: `
     <div class="toast-container" *ngIf="visibleToasts().length">
       @for (toast of visibleToasts(); track toast.id) {
         <div 
@@ -41,7 +40,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
       }
     </div>
   `,
-  styles: [`
+    styles: [`
     .toast-container {
       position: fixed;
       top: 1rem;
@@ -148,27 +147,27 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
       color: #fef3c7;
     }
   `],
-  animations: [
-    trigger('toastAnimation', [
-      state('visible', style({
-        transform: 'translateX(0)',
-        opacity: 1
-      })),
-      transition(':enter', [
-        style({
-          transform: 'translateX(100%)',
-          opacity: 0
-        }),
-        animate('300ms ease-out')
-      ]),
-      transition(':leave', [
-        animate('200ms ease-in', style({
-          transform: 'translateX(100%)',
-          opacity: 0
-        }))
-      ])
-    ])
-  ]
+    animations: [
+        trigger('toastAnimation', [
+            state('visible', style({
+                transform: 'translateX(0)',
+                opacity: 1
+            })),
+            transition(':enter', [
+                style({
+                    transform: 'translateX(100%)',
+                    opacity: 0
+                }),
+                animate('300ms ease-out')
+            ]),
+            transition(':leave', [
+                animate('200ms ease-in', style({
+                    transform: 'translateX(100%)',
+                    opacity: 0
+                }))
+            ])
+        ])
+    ]
 })
 export class ToastComponent {
   private toastService = inject(ToastService);

@@ -4,10 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-forgot-password',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgIf],
-  template: `
+    selector: 'app-forgot-password',
+    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    template: `
     <h2>Forgot Password</h2>
     <p class="description">
       Enter your email address and we'll send you a link to reset your password.
@@ -46,8 +45,8 @@ import { NgIf } from '@angular/common';
       <p>Please check your inbox and follow the instructions to reset your password.</p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       h2 {
         text-align: center;
         margin-bottom: 16px;
@@ -115,7 +114,7 @@ import { NgIf } from '@angular/common';
         margin: 8px 0;
       }
     `
-  ]
+    ]
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;

@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-users',
-  standalone: true,
-  imports: [RouterLink],
-  template: `
+    selector: 'app-users',
+    imports: [RouterLink],
+    template: `
     <div class="users-container">
       <div class="users-header">
         <h1>Users Management</h1>
@@ -50,8 +49,8 @@ import { RouterLink } from '@angular/router';
       </table>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .users-container {
         padding: 20px;
       }
@@ -102,6 +101,6 @@ import { RouterLink } from '@angular/router';
         color: white;
       }
     `
-  ]
+    ]
 })
 export class UsersComponent {}

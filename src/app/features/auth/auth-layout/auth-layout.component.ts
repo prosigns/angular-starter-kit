@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-auth-layout',
-  standalone: true,
-  imports: [RouterOutlet],
-  template: `
+    selector: 'app-auth-layout',
+    imports: [RouterOutlet],
+    template: `
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-logo">
@@ -17,8 +16,8 @@ import { RouterOutlet } from '@angular/router';
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .auth-container {
         display: flex;
         justify-content: center;
@@ -48,6 +47,6 @@ import { RouterOutlet } from '@angular/router';
         padding: 20px;
       }
     `
-  ]
+    ]
 })
 export class AuthLayoutComponent {}

@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard-layout',
-  standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
-  template: `
+    selector: 'app-dashboard-layout',
+    imports: [RouterOutlet, RouterLink, RouterLinkActive],
+    template: `
     <div class="dashboard-container">
       <header class="dashboard-header">
         <div class="header-left">
@@ -41,8 +40,8 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .dashboard-container {
         display: flex;
         flex-direction: column;
@@ -102,6 +101,6 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
         background-color: #ffffff;
       }
     `
-  ]
+    ]
 })
 export class DashboardLayoutComponent {}
