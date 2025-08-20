@@ -1,162 +1,177 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-profile',
-    imports: [ReactiveFormsModule, NgIf],
+    imports: [ReactiveFormsModule],
     template: `
     <div class="profile-container">
       <h1>My Profile</h1>
-
+    
       <div class="profile-content">
         <div class="profile-sidebar">
           <div class="profile-avatar">
             <img src="assets/images/avatar-placeholder.jpg" alt="Profile Avatar" />
             <button class="change-avatar-btn">Change Avatar</button>
           </div>
-
+    
           <div class="profile-info">
             <h3>John Doe</h3>
             <p>Administrator</p>
             <p>Member since: Jan 2023</p>
           </div>
         </div>
-
+    
         <div class="profile-details">
           <h2>Personal Information</h2>
-
+    
           <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name</label>
                 <input type="text" id="firstName" formControlName="firstName" />
-                <div
-                  *ngIf="
-                    profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched
-                  "
-                  class="error-message"
-                >
-                  First name is required
-                </div>
+                @if (
+                  profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched
+                  ) {
+                  <div
+                    class="error-message"
+                    >
+                    First name is required
+                  </div>
+                }
               </div>
-
+    
               <div class="form-group">
                 <label for="lastName">Last Name</label>
                 <input type="text" id="lastName" formControlName="lastName" />
-                <div
-                  *ngIf="
-                    profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched
-                  "
-                  class="error-message"
-                >
-                  Last name is required
-                </div>
+                @if (
+                  profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched
+                  ) {
+                  <div
+                    class="error-message"
+                    >
+                    Last name is required
+                  </div>
+                }
               </div>
             </div>
-
+    
             <div class="form-group">
               <label for="email">Email</label>
               <input type="email" id="email" formControlName="email" />
-              <div
-                *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
-                class="error-message"
-              >
-                <span *ngIf="profileForm.get('email')?.errors?.['required']"
-                  >Email is required</span
-                >
-                <span *ngIf="profileForm.get('email')?.errors?.['email']"
-                  >Enter a valid email address</span
-                >
+              @if (profileForm.get('email')?.invalid && profileForm.get('email')?.touched) {
+                <div
+                  class="error-message"
+                  >
+                  @if (profileForm.get('email')?.errors?.['required']) {
+                    <span
+                      >Email is required</span
+                      >
+                    }
+                    @if (profileForm.get('email')?.errors?.['email']) {
+                      <span
+                        >Enter a valid email address</span
+                        >
+                      }
+                    </div>
+                  }
+                </div>
+    
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" formControlName="phone" />
+                </div>
+    
+                <div class="form-group">
+                  <label for="bio">Bio</label>
+                  <textarea id="bio" formControlName="bio" rows="4"></textarea>
+                </div>
+    
+                <div class="form-actions">
+                  <button type="button" (click)="resetForm()">Cancel</button>
+                  <button type="submit" [disabled]="profileForm.invalid || !profileForm.dirty">
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+    
+              <h2>Change Password</h2>
+    
+              <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+                <div class="form-group">
+                  <label for="currentPassword">Current Password</label>
+                  <input type="password" id="currentPassword" formControlName="currentPassword" />
+                  @if (
+                    passwordForm.get('currentPassword')?.invalid &&
+                    passwordForm.get('currentPassword')?.touched
+                    ) {
+                    <div
+                      class="error-message"
+                      >
+                      Current password is required
+                    </div>
+                  }
+                </div>
+    
+                <div class="form-group">
+                  <label for="newPassword">New Password</label>
+                  <input type="password" id="newPassword" formControlName="newPassword" />
+                  @if (
+                    passwordForm.get('newPassword')?.invalid &&
+                    passwordForm.get('newPassword')?.touched
+                    ) {
+                    <div
+                      class="error-message"
+                      >
+                      @if (passwordForm.get('newPassword')?.errors?.['required']) {
+                        <span
+                          >New password is required</span
+                          >
+                        }
+                        @if (passwordForm.get('newPassword')?.errors?.['minlength']) {
+                          <span>
+                            Password must be at least 8 characters
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+    
+                  <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" formControlName="confirmPassword" />
+                    @if (
+                      passwordForm.get('confirmPassword')?.invalid &&
+                      passwordForm.get('confirmPassword')?.touched
+                      ) {
+                      <div
+                        class="error-message"
+                        >
+                        Confirm password is required
+                      </div>
+                    }
+                    @if (
+                      passwordForm.errors?.['passwordMismatch'] &&
+                      passwordForm.get('confirmPassword')?.touched
+                      ) {
+                      <div
+                        class="error-message"
+                        >
+                        Passwords do not match
+                      </div>
+                    }
+                  </div>
+    
+                  <div class="form-actions">
+                    <button type="button" (click)="resetPasswordForm()">Cancel</button>
+                    <button type="submit" [disabled]="passwordForm.invalid">Change Password</button>
+                  </div>
+                </form>
               </div>
             </div>
-
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="tel" id="phone" formControlName="phone" />
-            </div>
-
-            <div class="form-group">
-              <label for="bio">Bio</label>
-              <textarea id="bio" formControlName="bio" rows="4"></textarea>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" (click)="resetForm()">Cancel</button>
-              <button type="submit" [disabled]="profileForm.invalid || !profileForm.dirty">
-                Save Changes
-              </button>
-            </div>
-          </form>
-
-          <h2>Change Password</h2>
-
-          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-            <div class="form-group">
-              <label for="currentPassword">Current Password</label>
-              <input type="password" id="currentPassword" formControlName="currentPassword" />
-              <div
-                *ngIf="
-                  passwordForm.get('currentPassword')?.invalid &&
-                  passwordForm.get('currentPassword')?.touched
-                "
-                class="error-message"
-              >
-                Current password is required
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="newPassword">New Password</label>
-              <input type="password" id="newPassword" formControlName="newPassword" />
-              <div
-                *ngIf="
-                  passwordForm.get('newPassword')?.invalid &&
-                  passwordForm.get('newPassword')?.touched
-                "
-                class="error-message"
-              >
-                <span *ngIf="passwordForm.get('newPassword')?.errors?.['required']"
-                  >New password is required</span
-                >
-                <span *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">
-                  Password must be at least 8 characters
-                </span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" formControlName="confirmPassword" />
-              <div
-                *ngIf="
-                  passwordForm.get('confirmPassword')?.invalid &&
-                  passwordForm.get('confirmPassword')?.touched
-                "
-                class="error-message"
-              >
-                Confirm password is required
-              </div>
-              <div
-                *ngIf="
-                  passwordForm.errors?.['passwordMismatch'] &&
-                  passwordForm.get('confirmPassword')?.touched
-                "
-                class="error-message"
-              >
-                Passwords do not match
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" (click)="resetPasswordForm()">Cancel</button>
-              <button type="submit" [disabled]="passwordForm.invalid">Change Password</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  `,
+          </div>
+    `,
     styles: [
         `
       .profile-container {

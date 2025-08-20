@@ -1,19 +1,19 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-home',
-    imports: [CommonModule, RouterModule, TranslateModule],
+    imports: [RouterModule, TranslateModule],
     template: `
     <div class="home-container">
       <header class="home-header">
         <div class="container">
           <h1 class="home-title">{{ 'home.title' | translate }}</h1>
           <p class="home-subtitle">{{ 'home.subtitle' | translate }}</p>
-          
+    
           <div class="home-actions">
             <button class="btn btn-primary" routerLink="/auth/login">
               {{ 'home.loginButton' | translate }}
@@ -24,7 +24,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           </div>
         </div>
       </header>
-      
+    
       <main class="home-main container">
         <section class="home-features">
           <h2>{{ 'home.features.title' | translate }}</h2>
@@ -52,7 +52,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
           </div>
         </section>
       </main>
-      
+    
       <footer class="home-footer">
         <div class="container">
           <div class="footer-content">
@@ -60,7 +60,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
               <h3>{{ 'app.name' | translate }}</h3>
               <p>{{ 'footer.copyright' | translate }}</p>
             </div>
-            
+    
             <div class="footer-links">
               <div class="footer-section">
                 <h4>{{ 'footer.links.title' | translate }}</h4>
@@ -71,7 +71,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                   <li><a href="#">{{ 'footer.links.terms' | translate }}</a></li>
                 </ul>
               </div>
-              
+    
               <div class="footer-section">
                 <h4>{{ 'footer.language' | translate }}</h4>
                 <div class="language-selector">
@@ -80,13 +80,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
                   <button (click)="changeLanguage('fr')">Français</button>
                 </div>
               </div>
-              
+    
               <div class="footer-section">
                 <h4>{{ 'footer.theme' | translate }}</h4>
                 <button (click)="toggleTheme()" class="theme-toggle">
-                  <span *ngIf="themeService.currentTheme() === 'light'">🌙 {{ 'footer.darkMode' | translate }}</span>
-                  <span *ngIf="themeService.currentTheme() === 'dark'">☀️ {{ 'footer.lightMode' | translate }}</span>
-                  <span *ngIf="themeService.currentTheme() === 'system'">🖥️ {{ 'footer.systemTheme' | translate }}</span>
+                  @if (themeService.currentTheme() === 'light') {
+                    <span>🌙 {{ 'footer.darkMode' | translate }}</span>
+                  }
+                  @if (themeService.currentTheme() === 'dark') {
+                    <span>☀️ {{ 'footer.lightMode' | translate }}</span>
+                  }
+                  @if (themeService.currentTheme() === 'system') {
+                    <span>🖥️ {{ 'footer.systemTheme' | translate }}</span>
+                  }
                 </button>
               </div>
             </div>
@@ -94,7 +100,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
         </div>
       </footer>
     </div>
-  `,
+    `,
     styles: [`
     :host {
       display: block;

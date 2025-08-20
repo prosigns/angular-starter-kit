@@ -1,29 +1,31 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { LoaderService } from '../../../core/services/loader.service';
 
 @Component({
     selector: 'app-loader',
-    imports: [CommonModule],
+    imports: [],
     template: `
-    <div class="loader-container" *ngIf="loaderService.isLoading()">
-      <div class="loader-backdrop"></div>
-      <div class="loader-spinner">
-        <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" />
-          <path 
-            d="M 50 5 A 45 45 0 0 1 95 50" 
-            fill="none" 
-            stroke="currentColor" 
-            stroke-width="8" 
-            stroke-linecap="round" 
-            class="loader-spinner-path" 
-          />
-        </svg>
-        <div class="loader-text">{{ loaderService.loadingMessage() }}</div>
-      </div>
-    </div>
-  `,
+    @if (loaderService.isLoading()) {
+      <div class="loader-container">
+        <div class="loader-backdrop"></div>
+        <div class="loader-spinner">
+          <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" />
+            <path
+              d="M 50 5 A 45 45 0 0 1 95 50"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="8"
+              stroke-linecap="round"
+              class="loader-spinner-path"
+              />
+            </svg>
+            <div class="loader-text">{{ loaderService.loadingMessage() }}</div>
+          </div>
+        </div>
+      }
+    `,
     styles: [`
     .loader-container {
       position: fixed;

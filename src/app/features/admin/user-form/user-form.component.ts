@@ -1,35 +1,38 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-user-form',
-    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    imports: [ReactiveFormsModule, RouterLink],
     template: `
     <div class="user-form-container">
       <h1>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h1>
-
+    
       <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="name">Full Name</label>
           <input type="text" id="name" formControlName="name" />
-          <div class="error" *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched">
-            Name is required
-          </div>
+          @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
+            <div class="error">
+              Name is required
+            </div>
+          }
         </div>
-
+    
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" formControlName="email" />
-          <div
-            class="error"
-            *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
-          >
-            Valid email is required
-          </div>
+          @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+            <div
+              class="error"
+              >
+              Valid email is required
+            </div>
+          }
         </div>
-
+    
         <div class="form-group">
           <label for="role">Role</label>
           <select id="role" formControlName="role">
@@ -38,7 +41,7 @@ import { NgIf } from '@angular/common';
             <option value="editor">Editor</option>
           </select>
         </div>
-
+    
         <div class="form-group">
           <label for="status">Status</label>
           <select id="status" formControlName="status">
@@ -47,14 +50,14 @@ import { NgIf } from '@angular/common';
             <option value="pending">Pending</option>
           </select>
         </div>
-
+    
         <div class="form-actions">
           <button type="button" [routerLink]="['../..']">Cancel</button>
           <button type="submit" [disabled]="userForm.invalid">Save</button>
         </div>
       </form>
     </div>
-  `,
+    `,
     styles: [
         `
       .user-form-container {
