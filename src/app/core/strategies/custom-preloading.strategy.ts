@@ -21,13 +21,13 @@ export class CustomPreloadingStrategy implements PreloadingStrategy {
     if (route.data?.['preload'] === true || route.data?.['preloadPriority'] !== undefined) {
       // Default priority is 50 (medium)
       const priority = route.data?.['preloadPriority'] ?? 50;
-      
+
       // Calculate delay based on priority (lower priority = higher delay)
       // Priority 0 = no delay, priority 100 = 10 second delay
       const delayMs = Math.max(0, 100 - priority) * 100;
-      
+
       console.debug(`Preloading ${route.path} with priority ${priority} (delay: ${delayMs}ms)`);
-      
+
       // Preload after the calculated delay
       return of(true).pipe(
         delay(delayMs),
@@ -38,4 +38,4 @@ export class CustomPreloadingStrategy implements PreloadingStrategy {
     // By default, don't preload
     return of(null);
   }
-} 
+}

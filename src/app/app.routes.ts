@@ -11,17 +11,21 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
+    loadChildren: () =>
+      import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
     canActivate: [() => import('./core/guards/auth.guard').then(m => m.authGuard)]
   },
   {
     path: 'admin',
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
-    canActivate: [() => import('./core/guards/auth.guard').then(m => m.authGuard), 
-                  () => import('./core/guards/role.guard').then(m => m.roleGuard(['ADMIN'])) ]
+    canActivate: [
+      () => import('./core/guards/auth.guard').then(m => m.authGuard),
+      () => import('./core/guards/role.guard').then(m => m.roleGuard(['ADMIN']))
+    ]
   },
   {
     path: '**',
-    loadComponent: () => import('./features/not-found/not-found.component').then(m => m.NotFoundComponent)
+    loadComponent: () =>
+      import('./features/not-found/not-found.component').then(m => m.NotFoundComponent)
   }
 ];

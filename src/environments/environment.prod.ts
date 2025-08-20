@@ -10,4 +10,4 @@ export const environment = {
     multilingual: true,
     adminPortal: true
   }
-}; 
+};

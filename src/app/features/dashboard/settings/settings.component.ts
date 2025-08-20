@@ -1,46 +1,45 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-
 @Component({
-    selector: 'app-settings',
-    imports: [ReactiveFormsModule],
-    template: `
+  selector: 'app-settings',
+  imports: [ReactiveFormsModule],
+  template: `
     <div class="settings-container">
       <h1>Settings</h1>
-    
+
       <div class="settings-content">
         <div class="settings-nav">
           <button
             class="nav-item"
             [class.active]="activeSection === 'account'"
             (click)="setActiveSection('account')"
-            >
+          >
             Account Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'notification'"
             (click)="setActiveSection('notification')"
-            >
+          >
             Notification Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'privacy'"
             (click)="setActiveSection('privacy')"
-            >
+          >
             Privacy Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'appearance'"
             (click)="setActiveSection('appearance')"
-            >
+          >
             Appearance
           </button>
         </div>
-    
+
         <div class="settings-panel">
           <!-- Account Settings -->
           @if (activeSection === 'account') {
@@ -81,7 +80,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
               </form>
             </div>
           }
-    
+
           <!-- Notification Settings -->
           @if (activeSection === 'notification') {
             <div class="settings-section">
@@ -119,7 +118,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
               </form>
             </div>
           }
-    
+
           <!-- Privacy Settings -->
           @if (activeSection === 'privacy') {
             <div class="settings-section">
@@ -157,7 +156,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
               </form>
             </div>
           }
-    
+
           <!-- Appearance Settings -->
           @if (activeSection === 'appearance') {
             <div class="settings-section">
@@ -196,9 +195,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
         </div>
       </div>
     </div>
-    `,
-    styles: [
-        `
+  `,
+  styles: [
+    `
       .settings-container {
         padding: 20px;
       }
@@ -393,7 +392,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
         }
       }
     `
-    ]
+  ]
 })
 export class SettingsComponent {
   activeSection = 'account';

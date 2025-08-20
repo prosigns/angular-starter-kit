@@ -2,125 +2,97 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-
 @Component({
-    selector: 'app-register',
-    imports: [ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-register',
+  imports: [ReactiveFormsModule, RouterLink],
+  template: `
     <h2>Create Account</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="name">Full Name</label>
         <input type="text" id="name" formControlName="name" placeholder="Enter your full name" />
         @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
-          <div
-            class="error-message"
-            >
-            Full name is required
-          </div>
+          <div class="error-message">Full name is required</div>
         }
       </div>
-    
+
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
         @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-          <div
-            class="error-message"
-            >
+          <div class="error-message">
             @if (registerForm.get('email')?.errors?.['required']) {
               <span>Email is required</span>
             }
             @if (registerForm.get('email')?.errors?.['email']) {
-              <span
-                >Enter a valid email address</span
-                >
-              }
-            </div>
-          }
-        </div>
-    
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="Create a password"
-            />
-            @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-              <div
-                class="error-message"
-                >
-                @if (registerForm.get('password')?.errors?.['required']) {
-                  <span
-                    >Password is required</span
-                    >
-                }
-                @if (registerForm.get('password')?.errors?.['minlength']) {
-                  <span>
-                    Password must be at least 8 characters
-                  </span>
-                }
-              </div>
+              <span>Enter a valid email address</span>
             }
           </div>
-    
-          <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              placeholder="Confirm your password"
-              />
-              @if (
-                registerForm.get('confirmPassword')?.invalid &&
-                registerForm.get('confirmPassword')?.touched
-                ) {
-                <div
-                  class="error-message"
-                  >
-                  @if (registerForm.get('confirmPassword')?.errors?.['required']) {
-                    <span>
-                      Password confirmation is required
-                    </span>
-                  }
-                </div>
-              }
-              @if (
-                registerForm.errors?.['passwordMismatch'] &&
-                registerForm.get('confirmPassword')?.touched
-                ) {
-                <div
-                  class="error-message"
-                  >
-                  Passwords do not match
-                </div>
-              }
-            </div>
-    
-            <div class="form-group terms">
-              <input type="checkbox" id="terms" formControlName="terms" />
-              <label for="terms">I agree to the Terms and Conditions</label>
-              @if (registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched) {
-                <div
-                  class="error-message"
-                  >
-                  You must agree to the terms and conditions
-                </div>
-              }
-            </div>
-    
-            <button type="submit" [disabled]="registerForm.invalid">Create Account</button>
-    
-            <div class="auth-links">
-              <p>Already have an account? <a [routerLink]="['/auth/login']">Sign In</a></p>
-            </div>
-          </form>
-    `,
-    styles: [
-        `
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Create a password"
+        />
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <div class="error-message">
+            @if (registerForm.get('password')?.errors?.['required']) {
+              <span>Password is required</span>
+            }
+            @if (registerForm.get('password')?.errors?.['minlength']) {
+              <span> Password must be at least 8 characters </span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+        />
+        @if (
+          registerForm.get('confirmPassword')?.invalid &&
+          registerForm.get('confirmPassword')?.touched
+        ) {
+          <div class="error-message">
+            @if (registerForm.get('confirmPassword')?.errors?.['required']) {
+              <span> Password confirmation is required </span>
+            }
+          </div>
+        }
+        @if (
+          registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched
+        ) {
+          <div class="error-message">Passwords do not match</div>
+        }
+      </div>
+
+      <div class="form-group terms">
+        <input type="checkbox" id="terms" formControlName="terms" />
+        <label for="terms">I agree to the Terms and Conditions</label>
+        @if (registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched) {
+          <div class="error-message">You must agree to the terms and conditions</div>
+        }
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid">Create Account</button>
+
+      <div class="auth-links">
+        <p>Already have an account? <a [routerLink]="['/auth/login']">Sign In</a></p>
+      </div>
+    </form>
+  `,
+  styles: [
+    `
       h2 {
         text-align: center;
         margin-bottom: 24px;
@@ -184,7 +156,7 @@ import { Router, RouterLink } from '@angular/router';
         text-decoration: none;
       }
     `
-    ]
+  ]
 })
 export class RegisterComponent {
   registerForm: FormGroup;

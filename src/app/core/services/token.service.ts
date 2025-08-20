@@ -13,7 +13,7 @@ export class TokenService {
   setTokens(tokens: AuthTokens): void {
     localStorage.setItem(this.ACCESS_TOKEN_KEY, tokens.accessToken);
     localStorage.setItem(this.REFRESH_TOKEN_KEY, tokens.refreshToken);
-    
+
     // Calculate and store expiry time
     const expiryTime = Date.now() + tokens.expiresIn * 1000;
     localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiryTime.toString());
@@ -36,26 +36,26 @@ export class TokenService {
   isTokenValid(): boolean {
     const token = this.getAccessToken();
     const expiryTime = localStorage.getItem(this.TOKEN_EXPIRY_KEY);
-    
+
     if (!token || !expiryTime) {
       return false;
     }
-    
+
     // Check if token has expired
     const now = Date.now();
     const expiry = parseInt(expiryTime, 10);
-    
+
     // Token is valid if the current time is before expiry with a 10-second buffer
     return now < expiry - 10000;
   }
 
   getTokenPayload<T>(): T | null {
     const token = this.getAccessToken();
-    
+
     if (!token) {
       return null;
     }
-    
+
     try {
       return jwtDecode<T>(token);
     } catch (error) {
@@ -63,4 +63,4 @@ export class TokenService {
       return null;
     }
   }
-} 
+}

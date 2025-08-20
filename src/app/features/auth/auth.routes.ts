@@ -3,7 +3,8 @@ import { Routes } from '@angular/router';
 export const AUTH_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
+    loadComponent: () =>
+      import('./auth-layout/auth-layout.component').then(m => m.AuthLayoutComponent),
     children: [
       {
         path: '',
@@ -22,14 +23,18 @@ export const AUTH_ROUTES: Routes = [
       },
       {
         path: 'forgot-password',
-        loadComponent: () => import('./forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+        loadComponent: () =>
+          import('./forgot-password/forgot-password.component').then(
+            m => m.ForgotPasswordComponent
+          ),
         title: 'Forgot Password'
       },
       {
         path: 'reset-password',
-        loadComponent: () => import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+        loadComponent: () =>
+          import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
         title: 'Reset Password'
       }
     ]
   }
-]; 
+];

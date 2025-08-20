@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-
 @Component({
-    selector: 'app-login',
-    imports: [ReactiveFormsModule, RouterLink],
-    template: `
+  selector: 'app-login',
+  imports: [ReactiveFormsModule, RouterLink],
+  template: `
     <h2>Sign In</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
@@ -17,60 +16,56 @@ import { Router, RouterLink } from '@angular/router';
           formControlName="email"
           placeholder="Enter your email"
           [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-          />
-          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-            <div
-              class="error-message"
-              >
-              @if (loginForm.get('email')?.errors?.['required']) {
-                <span>Email is required</span>
-              }
-              @if (loginForm.get('email')?.errors?.['email']) {
-                <span>Enter a valid email address</span>
-              }
-            </div>
-          }
-        </div>
-    
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            placeholder="Enter your password"
+        />
+        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+          <div class="error-message">
+            @if (loginForm.get('email')?.errors?.['required']) {
+              <span>Email is required</span>
+            }
+            @if (loginForm.get('email')?.errors?.['email']) {
+              <span>Enter a valid email address</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
           [class.is-invalid]="
             loginForm.get('password')?.invalid && loginForm.get('password')?.touched
           "
-            />
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-              <div
-                class="error-message"
-                >
-                @if (loginForm.get('password')?.errors?.['required']) {
-                  <span>Password is required</span>
-                }
-              </div>
+        />
+        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+          <div class="error-message">
+            @if (loginForm.get('password')?.errors?.['required']) {
+              <span>Password is required</span>
             }
           </div>
-    
-          <div class="form-options">
-            <div class="remember-me">
-              <input type="checkbox" id="remember" formControlName="rememberMe" />
-              <label for="remember">Remember me</label>
-            </div>
-            <a [routerLink]="['/auth/forgot-password']" class="forgot-password">Forgot password?</a>
-          </div>
-    
-          <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
-    
-          <div class="auth-links">
-            <p>Don't have an account? <a [routerLink]="['/auth/register']">Sign Up</a></p>
-          </div>
-        </form>
-    `,
-    styles: [
-        `
+        }
+      </div>
+
+      <div class="form-options">
+        <div class="remember-me">
+          <input type="checkbox" id="remember" formControlName="rememberMe" />
+          <label for="remember">Remember me</label>
+        </div>
+        <a [routerLink]="['/auth/forgot-password']" class="forgot-password">Forgot password?</a>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
+
+      <div class="auth-links">
+        <p>Don't have an account? <a [routerLink]="['/auth/register']">Sign Up</a></p>
+      </div>
+    </form>
+  `,
+  styles: [
+    `
       h2 {
         text-align: center;
         margin-bottom: 24px;
@@ -142,7 +137,7 @@ import { Router, RouterLink } from '@angular/router';
         text-decoration: none;
       }
     `
-    ]
+  ]
 })
 export class LoginComponent {
   loginForm: FormGroup;

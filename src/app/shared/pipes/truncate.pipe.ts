@@ -9,15 +9,15 @@ export class TruncatePipe implements PipeTransform {
     if (!value) {
       return '';
     }
-    
+
     if (value.length <= limit) {
       return value;
     }
-    
+
     if (completeWords) {
       limit = value.substring(0, limit).lastIndexOf(' ');
     }
-    
+
     return `${value.substring(0, limit)}${ellipsis}`;
   }
-} 
+}

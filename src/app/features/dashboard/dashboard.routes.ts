@@ -3,11 +3,13 @@ import { Routes } from '@angular/router';
 export const DASHBOARD_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
+    loadComponent: () =>
+      import('./dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
     children: [
       {
         path: '',
-        loadComponent: () => import('./dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent),
+        loadComponent: () =>
+          import('./dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent),
         title: 'Dashboard'
       },
       {
@@ -22,7 +24,8 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       {
         path: 'analytics',
-        loadComponent: () => import('./analytics/analytics.component').then(m => m.AnalyticsComponent),
+        loadComponent: () =>
+          import('./analytics/analytics.component').then(m => m.AnalyticsComponent),
         title: 'Analytics',
         data: {
           preload: true,
@@ -31,4 +34,4 @@ export const DASHBOARD_ROUTES: Routes = [
       }
     ]
   }
-]; 
+];
