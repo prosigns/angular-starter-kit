@@ -4,10 +4,9 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-not-found',
-  standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
-  template: `
+    selector: 'app-not-found',
+    imports: [CommonModule, RouterModule, TranslateModule],
+    template: `
     <div class="not-found-container">
       <div class="not-found-content">
         <div class="not-found-code">404</div>
@@ -21,7 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
       </div>
     </div>
   `,
-  styles: [`
+    styles: [`
     .not-found-container {
       display: flex;
       justify-content: center;

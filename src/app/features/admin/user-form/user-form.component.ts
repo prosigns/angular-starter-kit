@@ -4,10 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-user-form',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgIf],
-  template: `
+    selector: 'app-user-form',
+    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    template: `
     <div class="user-form-container">
       <h1>{{ isEditMode ? 'Edit User' : 'Create New User' }}</h1>
 
@@ -56,8 +55,8 @@ import { NgIf } from '@angular/common';
       </form>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .user-form-container {
         max-width: 600px;
         margin: 0 auto;
@@ -106,7 +105,7 @@ import { NgIf } from '@angular/common';
         background-color: #f5f5f5;
       }
     `
-  ]
+    ]
 })
 export class UserFormComponent {
   userForm: FormGroup;

@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-profile',
-  standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
-  template: `
+    selector: 'app-profile',
+    imports: [ReactiveFormsModule, NgIf],
+    template: `
     <div class="profile-container">
       <h1>My Profile</h1>
 
@@ -158,8 +157,8 @@ import { NgIf } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .profile-container {
         padding: 20px;
       }
@@ -318,7 +317,7 @@ import { NgIf } from '@angular/common';
         }
       }
     `
-  ]
+    ]
 })
 export class ProfileComponent {
   profileForm: FormGroup;

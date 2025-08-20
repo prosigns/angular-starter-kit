@@ -5,10 +5,9 @@ import { ThemeService } from '../../core/services/theme.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [CommonModule, RouterModule, TranslateModule],
-  template: `
+    selector: 'app-home',
+    imports: [CommonModule, RouterModule, TranslateModule],
+    template: `
     <div class="home-container">
       <header class="home-header">
         <div class="container">
@@ -96,7 +95,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
       </footer>
     </div>
   `,
-  styles: [`
+    styles: [`
     :host {
       display: block;
       min-height: 100vh;

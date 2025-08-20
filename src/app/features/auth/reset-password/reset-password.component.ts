@@ -4,10 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-reset-password',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgIf],
-  template: `
+    selector: 'app-reset-password',
+    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    template: `
     <h2>Reset Password</h2>
     <p class="description" *ngIf="!submitted">Please enter your new password below.</p>
 
@@ -80,8 +79,8 @@ import { NgIf } from '@angular/common';
       </p>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       h2 {
         text-align: center;
         margin-bottom: 16px;
@@ -154,7 +153,7 @@ import { NgIf } from '@angular/common';
         text-decoration: none;
       }
     `
-  ]
+    ]
 })
 export class ResetPasswordComponent implements OnInit {
   resetPasswordForm: FormGroup;

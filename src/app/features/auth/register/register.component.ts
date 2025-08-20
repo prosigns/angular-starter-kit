@@ -4,10 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgIf],
-  template: `
+    selector: 'app-register',
+    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    template: `
     <h2>Create Account</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
@@ -104,8 +103,8 @@ import { NgIf } from '@angular/common';
       </div>
     </form>
   `,
-  styles: [
-    `
+    styles: [
+        `
       h2 {
         text-align: center;
         margin-bottom: 24px;
@@ -169,7 +168,7 @@ import { NgIf } from '@angular/common';
         text-decoration: none;
       }
     `
-  ]
+    ]
 })
 export class RegisterComponent {
   registerForm: FormGroup;

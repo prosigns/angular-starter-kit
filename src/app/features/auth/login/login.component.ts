@@ -4,10 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgIf],
-  template: `
+    selector: 'app-login',
+    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    template: `
     <h2>Sign In</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
@@ -62,8 +61,8 @@ import { NgIf } from '@angular/common';
       </div>
     </form>
   `,
-  styles: [
-    `
+    styles: [
+        `
       h2 {
         text-align: center;
         margin-bottom: 24px;
@@ -135,7 +134,7 @@ import { NgIf } from '@angular/common';
         text-decoration: none;
       }
     `
-  ]
+    ]
 })
 export class LoginComponent {
   loginForm: FormGroup;

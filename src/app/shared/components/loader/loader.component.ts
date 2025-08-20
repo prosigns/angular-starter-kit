@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../../core/services/loader.service';
 
 @Component({
-  selector: 'app-loader',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+    selector: 'app-loader',
+    imports: [CommonModule],
+    template: `
     <div class="loader-container" *ngIf="loaderService.isLoading()">
       <div class="loader-backdrop"></div>
       <div class="loader-spinner">
@@ -25,7 +24,7 @@ import { LoaderService } from '../../../core/services/loader.service';
       </div>
     </div>
   `,
-  styles: [`
+    styles: [`
     .loader-container {
       position: fixed;
       top: 0;

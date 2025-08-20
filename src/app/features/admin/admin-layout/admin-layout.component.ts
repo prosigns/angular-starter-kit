@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-layout',
-  standalone: true,
-  imports: [RouterOutlet],
-  template: `
+    selector: 'app-admin-layout',
+    imports: [RouterOutlet],
+    template: `
     <div class="admin-layout">
       <div class="admin-sidebar">
         <!-- Admin sidebar content will go here -->
@@ -15,8 +14,8 @@ import { RouterOutlet } from '@angular/router';
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .admin-layout {
         display: flex;
         height: 100%;
@@ -30,6 +29,6 @@ import { RouterOutlet } from '@angular/router';
         padding: 20px;
       }
     `
-  ]
+    ]
 })
 export class AdminLayoutComponent {}

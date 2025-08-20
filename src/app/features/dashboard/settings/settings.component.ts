@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
-  template: `
+    selector: 'app-settings',
+    imports: [ReactiveFormsModule, NgIf],
+    template: `
     <div class="settings-container">
       <h1>Settings</h1>
 
@@ -203,8 +202,8 @@ import { NgIf } from '@angular/common';
       </div>
     </div>
   `,
-  styles: [
-    `
+    styles: [
+        `
       .settings-container {
         padding: 20px;
       }
@@ -399,7 +398,7 @@ import { NgIf } from '@angular/common';
         }
       }
     `
-  ]
+    ]
 })
 export class SettingsComponent {
   activeSection = 'account';
