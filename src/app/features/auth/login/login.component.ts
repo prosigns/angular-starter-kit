@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-login',
-    imports: [ReactiveFormsModule, RouterLink, NgIf],
+    imports: [ReactiveFormsModule, RouterLink],
     template: `
     <h2>Sign In</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -17,50 +17,58 @@ import { NgIf } from '@angular/common';
           formControlName="email"
           placeholder="Enter your email"
           [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        />
-        <div
-          class="error-message"
-          *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        >
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address</span>
+          />
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <div
+              class="error-message"
+              >
+              @if (loginForm.get('email')?.errors?.['required']) {
+                <span>Email is required</span>
+              }
+              @if (loginForm.get('email')?.errors?.['email']) {
+                <span>Enter a valid email address</span>
+              }
+            </div>
+          }
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          formControlName="password"
-          placeholder="Enter your password"
+    
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Enter your password"
           [class.is-invalid]="
             loginForm.get('password')?.invalid && loginForm.get('password')?.touched
           "
-        />
-        <div
-          class="error-message"
-          *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        >
-          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
-        </div>
-      </div>
-
-      <div class="form-options">
-        <div class="remember-me">
-          <input type="checkbox" id="remember" formControlName="rememberMe" />
-          <label for="remember">Remember me</label>
-        </div>
-        <a [routerLink]="['/auth/forgot-password']" class="forgot-password">Forgot password?</a>
-      </div>
-
-      <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
-
-      <div class="auth-links">
-        <p>Don't have an account? <a [routerLink]="['/auth/register']">Sign Up</a></p>
-      </div>
-    </form>
-  `,
+            />
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+              <div
+                class="error-message"
+                >
+                @if (loginForm.get('password')?.errors?.['required']) {
+                  <span>Password is required</span>
+                }
+              </div>
+            }
+          </div>
+    
+          <div class="form-options">
+            <div class="remember-me">
+              <input type="checkbox" id="remember" formControlName="rememberMe" />
+              <label for="remember">Remember me</label>
+            </div>
+            <a [routerLink]="['/auth/forgot-password']" class="forgot-password">Forgot password?</a>
+          </div>
+    
+          <button type="submit" [disabled]="loginForm.invalid">Sign In</button>
+    
+          <div class="auth-links">
+            <p>Don't have an account? <a [routerLink]="['/auth/register']">Sign Up</a></p>
+          </div>
+        </form>
+    `,
     styles: [
         `
       h2 {

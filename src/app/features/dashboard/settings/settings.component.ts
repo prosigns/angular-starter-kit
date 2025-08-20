@@ -1,207 +1,202 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-settings',
-    imports: [ReactiveFormsModule, NgIf],
+    imports: [ReactiveFormsModule],
     template: `
     <div class="settings-container">
       <h1>Settings</h1>
-
+    
       <div class="settings-content">
         <div class="settings-nav">
           <button
             class="nav-item"
             [class.active]="activeSection === 'account'"
             (click)="setActiveSection('account')"
-          >
+            >
             Account Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'notification'"
             (click)="setActiveSection('notification')"
-          >
+            >
             Notification Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'privacy'"
             (click)="setActiveSection('privacy')"
-          >
+            >
             Privacy Settings
           </button>
           <button
             class="nav-item"
             [class.active]="activeSection === 'appearance'"
             (click)="setActiveSection('appearance')"
-          >
+            >
             Appearance
           </button>
         </div>
-
+    
         <div class="settings-panel">
           <!-- Account Settings -->
-          <div *ngIf="activeSection === 'account'" class="settings-section">
-            <h2>Account Settings</h2>
-
-            <form [formGroup]="accountForm">
-              <div class="form-group">
-                <label>
-                  <input type="checkbox" formControlName="twoFactorAuth" />
-                  Enable Two-Factor Authentication
-                </label>
-                <p class="help-text">
-                  Enhance your account security with two-factor authentication
-                </p>
-              </div>
-
-              <div class="form-group">
-                <label for="language">Language</label>
-                <select id="language" formControlName="language">
-                  <option value="en">English</option>
-                  <option value="es">Spanish</option>
-                  <option value="fr">French</option>
-                  <option value="de">German</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="timezone">Timezone</label>
-                <select id="timezone" formControlName="timezone">
-                  <option value="UTC-8">Pacific Time (UTC-8)</option>
-                  <option value="UTC-5">Eastern Time (UTC-5)</option>
-                  <option value="UTC">Universal Coordinated Time (UTC)</option>
-                  <option value="UTC+1">Central European Time (UTC+1)</option>
-                  <option value="UTC+8">China Standard Time (UTC+8)</option>
-                </select>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" (click)="saveSettings('account')">Save Changes</button>
-              </div>
-            </form>
-          </div>
-
+          @if (activeSection === 'account') {
+            <div class="settings-section">
+              <h2>Account Settings</h2>
+              <form [formGroup]="accountForm">
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" formControlName="twoFactorAuth" />
+                    Enable Two-Factor Authentication
+                  </label>
+                  <p class="help-text">
+                    Enhance your account security with two-factor authentication
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label for="language">Language</label>
+                  <select id="language" formControlName="language">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="timezone">Timezone</label>
+                  <select id="timezone" formControlName="timezone">
+                    <option value="UTC-8">Pacific Time (UTC-8)</option>
+                    <option value="UTC-5">Eastern Time (UTC-5)</option>
+                    <option value="UTC">Universal Coordinated Time (UTC)</option>
+                    <option value="UTC+1">Central European Time (UTC+1)</option>
+                    <option value="UTC+8">China Standard Time (UTC+8)</option>
+                  </select>
+                </div>
+                <div class="form-actions">
+                  <button type="button" (click)="saveSettings('account')">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          }
+    
           <!-- Notification Settings -->
-          <div *ngIf="activeSection === 'notification'" class="settings-section">
-            <h2>Notification Settings</h2>
-
-            <form [formGroup]="notificationForm">
-              <div class="form-group">
-                <h3>Email Notifications</h3>
-                <label>
-                  <input type="checkbox" formControlName="emailNews" />
-                  News and Updates
-                </label>
-                <label>
-                  <input type="checkbox" formControlName="emailAccount" />
-                  Account Activity
-                </label>
-                <label>
-                  <input type="checkbox" formControlName="emailMarketing" />
-                  Marketing and Promotions
-                </label>
-              </div>
-
-              <div class="form-group">
-                <h3>Push Notifications</h3>
-                <label>
-                  <input type="checkbox" formControlName="pushAccount" />
-                  Account Activity
-                </label>
-                <label>
-                  <input type="checkbox" formControlName="pushUpdates" />
-                  System Updates
-                </label>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" (click)="saveSettings('notification')">Save Changes</button>
-              </div>
-            </form>
-          </div>
-
+          @if (activeSection === 'notification') {
+            <div class="settings-section">
+              <h2>Notification Settings</h2>
+              <form [formGroup]="notificationForm">
+                <div class="form-group">
+                  <h3>Email Notifications</h3>
+                  <label>
+                    <input type="checkbox" formControlName="emailNews" />
+                    News and Updates
+                  </label>
+                  <label>
+                    <input type="checkbox" formControlName="emailAccount" />
+                    Account Activity
+                  </label>
+                  <label>
+                    <input type="checkbox" formControlName="emailMarketing" />
+                    Marketing and Promotions
+                  </label>
+                </div>
+                <div class="form-group">
+                  <h3>Push Notifications</h3>
+                  <label>
+                    <input type="checkbox" formControlName="pushAccount" />
+                    Account Activity
+                  </label>
+                  <label>
+                    <input type="checkbox" formControlName="pushUpdates" />
+                    System Updates
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <button type="button" (click)="saveSettings('notification')">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          }
+    
           <!-- Privacy Settings -->
-          <div *ngIf="activeSection === 'privacy'" class="settings-section">
-            <h2>Privacy Settings</h2>
-
-            <form [formGroup]="privacyForm">
-              <div class="form-group">
-                <h3>Profile Visibility</h3>
-                <label>
-                  <input type="radio" formControlName="profileVisibility" value="public" />
-                  Public - Anyone can view your profile
-                </label>
-                <label>
-                  <input type="radio" formControlName="profileVisibility" value="contacts" />
-                  Contacts Only - Only your contacts can view your profile
-                </label>
-                <label>
-                  <input type="radio" formControlName="profileVisibility" value="private" />
-                  Private - Only you can view your profile
-                </label>
-              </div>
-
-              <div class="form-group">
-                <h3>Data Usage</h3>
-                <label>
-                  <input type="checkbox" formControlName="dataAnalytics" />
-                  Allow data collection for analytics and improvements
-                </label>
-                <label>
-                  <input type="checkbox" formControlName="dataMarketing" />
-                  Allow data usage for marketing purposes
-                </label>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" (click)="saveSettings('privacy')">Save Changes</button>
-              </div>
-            </form>
-          </div>
-
+          @if (activeSection === 'privacy') {
+            <div class="settings-section">
+              <h2>Privacy Settings</h2>
+              <form [formGroup]="privacyForm">
+                <div class="form-group">
+                  <h3>Profile Visibility</h3>
+                  <label>
+                    <input type="radio" formControlName="profileVisibility" value="public" />
+                    Public - Anyone can view your profile
+                  </label>
+                  <label>
+                    <input type="radio" formControlName="profileVisibility" value="contacts" />
+                    Contacts Only - Only your contacts can view your profile
+                  </label>
+                  <label>
+                    <input type="radio" formControlName="profileVisibility" value="private" />
+                    Private - Only you can view your profile
+                  </label>
+                </div>
+                <div class="form-group">
+                  <h3>Data Usage</h3>
+                  <label>
+                    <input type="checkbox" formControlName="dataAnalytics" />
+                    Allow data collection for analytics and improvements
+                  </label>
+                  <label>
+                    <input type="checkbox" formControlName="dataMarketing" />
+                    Allow data usage for marketing purposes
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <button type="button" (click)="saveSettings('privacy')">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          }
+    
           <!-- Appearance Settings -->
-          <div *ngIf="activeSection === 'appearance'" class="settings-section">
-            <h2>Appearance</h2>
-
-            <form [formGroup]="appearanceForm">
-              <div class="form-group">
-                <h3>Theme</h3>
-                <div class="theme-options">
-                  <label class="theme-option">
-                    <input type="radio" formControlName="theme" value="light" />
-                    <div class="theme-preview light-theme">Light</div>
-                  </label>
-                  <label class="theme-option">
-                    <input type="radio" formControlName="theme" value="dark" />
-                    <div class="theme-preview dark-theme">Dark</div>
-                  </label>
-                  <label class="theme-option">
-                    <input type="radio" formControlName="theme" value="system" />
-                    <div class="theme-preview system-theme">System</div>
-                  </label>
+          @if (activeSection === 'appearance') {
+            <div class="settings-section">
+              <h2>Appearance</h2>
+              <form [formGroup]="appearanceForm">
+                <div class="form-group">
+                  <h3>Theme</h3>
+                  <div class="theme-options">
+                    <label class="theme-option">
+                      <input type="radio" formControlName="theme" value="light" />
+                      <div class="theme-preview light-theme">Light</div>
+                    </label>
+                    <label class="theme-option">
+                      <input type="radio" formControlName="theme" value="dark" />
+                      <div class="theme-preview dark-theme">Dark</div>
+                    </label>
+                    <label class="theme-option">
+                      <input type="radio" formControlName="theme" value="system" />
+                      <div class="theme-preview system-theme">System</div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <h3>Font Size</h3>
-                <div class="slider-container">
-                  <input type="range" min="12" max="20" formControlName="fontSize" />
-                  <span>{{ appearanceForm.get('fontSize')?.value }}px</span>
+                <div class="form-group">
+                  <h3>Font Size</h3>
+                  <div class="slider-container">
+                    <input type="range" min="12" max="20" formControlName="fontSize" />
+                    <span>{{ appearanceForm.get('fontSize')?.value }}px</span>
+                  </div>
                 </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" (click)="saveSettings('appearance')">Save Changes</button>
-              </div>
-            </form>
-          </div>
+                <div class="form-actions">
+                  <button type="button" (click)="saveSettings('appearance')">Save Changes</button>
+                </div>
+              </form>
+            </div>
+          }
         </div>
       </div>
     </div>
-  `,
+    `,
     styles: [
         `
       .settings-container {
