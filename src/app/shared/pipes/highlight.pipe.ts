@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Pipe({
@@ -6,11 +6,11 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   standalone: true
 })
 export class HighlightPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  private readonly _sanitizer = inject(DomSanitizer);
 
-  transform(text: string, search: string): SafeHtml {
+  public transform(text: string, search: string): SafeHtml {
     if (!search || !text) {
-      return this.sanitizer.bypassSecurityTrustHtml(text);
+      return this._sanitizer.bypassSecurityTrustHtml(text);
     }
 
     // Escape special RegExp characters
@@ -29,6 +29,6 @@ export class HighlightPipe implements PipeTransform {
     const replaced = text.replace(regex, '<span class="highlight">$1</span>');
 
     // Return sanitized HTML
-    return this.sanitizer.bypassSecurityTrustHtml(replaced);
+    return this._sanitizer.bypassSecurityTrustHtml(replaced);
   }
 }

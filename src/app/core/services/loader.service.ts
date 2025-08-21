@@ -5,16 +5,16 @@ import { Injectable, signal } from '@angular/core';
 })
 export class LoaderService {
   // Signals for reactive approach
-  readonly isLoading = signal<boolean>(false);
-  readonly loadingMessage = signal<string>('Loading...');
+  public readonly isLoading = signal<boolean>(false);
+  public readonly loadingMessage = signal<string>('Loading...');
 
-  private activeRequests = 0;
+  private _activeRequests = 0;
 
   /**
    * Start loading state with an optional custom message
    */
-  startLoading(message?: string): void {
-    this.activeRequests++;
+  public startLoading(message?: string): void {
+    this._activeRequests++;
     this.isLoading.set(true);
 
     if (message) {
@@ -25,21 +25,21 @@ export class LoaderService {
   /**
    * End loading state
    */
-  endLoading(): void {
-    this.activeRequests--;
+  public endLoading(): void {
+    this._activeRequests--;
 
     // Only set loading to false when all active requests are finished
-    if (this.activeRequests <= 0) {
-      this.activeRequests = 0;
+    if (this._activeRequests <= 0) {
+      this._activeRequests = 0;
       this.isLoading.set(false);
-      this.resetMessage();
+      this._resetMessage();
     }
   }
 
   /**
    * Update the loading message while loading is in progress
    */
-  updateMessage(message: string): void {
+  public updateMessage(message: string): void {
     if (this.isLoading()) {
       this.loadingMessage.set(message);
     }
@@ -48,7 +48,7 @@ export class LoaderService {
   /**
    * Reset the loading message to default
    */
-  private resetMessage(): void {
+  private _resetMessage(): void {
     this.loadingMessage.set('Loading...');
   }
 }

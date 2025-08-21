@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -115,22 +115,21 @@ import { Router, RouterLink } from '@angular/router';
   ]
 })
 export class ForgotPasswordComponent {
-  forgotPasswordForm: FormGroup;
-  submitted = false;
+  public forgotPasswordForm: FormGroup;
+  public submitted = false;
+  private _fb = inject(FormBuilder);
+  private _router = inject(Router);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _router: Router
-  ) {
+  constructor() {
     this.forgotPasswordForm = this._fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.forgotPasswordForm.valid) {
       // In a real app, this would call an authentication service
-      console.log('Forgot password request:', this.forgotPasswordForm.value);
+      // Forgot password request submitted
 
       // Show success message
       this.submitted = true;

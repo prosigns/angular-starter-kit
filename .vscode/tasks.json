@@ -5,7 +5,10 @@
     {
       "type": "npm",
       "script": "start",
+      "group": "build",
       "isBackground": true,
+      "label": "npm: start",
+      "detail": "ng serve",
       "problemMatcher": {
         "owner": "typescript",
         "pattern": "$tsc",
@@ -22,8 +25,35 @@
     },
     {
       "type": "npm",
+      "script": "build",
+      "group": "build",
+      "label": "npm: build",
+      "detail": "ng build",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "type": "npm",
+      "script": "build:prod",
+      "group": "build",
+      "label": "npm: build:prod",
+      "detail": "ng build --configuration production",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "group": "test",
+      "label": "npm: lint",
+      "detail": "ng lint",
+      "problemMatcher": "$eslint-stylish"
+    },
+    {
+      "type": "npm",
       "script": "test",
+      "group": "test",
       "isBackground": true,
+      "label": "npm: test",
+      "detail": "ng test",
       "problemMatcher": {
         "owner": "typescript",
         "pattern": "$tsc",
@@ -37,6 +67,14 @@
           }
         }
       }
+    },
+    {
+      "type": "npm",
+      "script": "e2e",
+      "group": "test",
+      "label": "npm: e2e",
+      "detail": "ng e2e",
+      "problemMatcher": "$tsc"
     }
   ]
 }

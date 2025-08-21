@@ -5,33 +5,34 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  private loggingService = inject(LoggingService);
-  private toastService = inject(ToastService);
-  private router = inject(Router);
-  private ngZone = inject(NgZone);
+  private _loggingService = inject(LoggingService);
+  private _toastService = inject(ToastService);
+  private _router = inject(Router);
+  private _ngZone = inject(NgZone);
 
-  handleError(error: any): void {
+  public handleError(error: unknown): void {
     // Extract error information
-    const message = error.message || 'Undefined error';
-    const stack = error.stack || '';
-    const isNetworkError = error instanceof TypeError && error.message.includes('NetworkError');
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+    const message = errorObj.message || 'Undefined error';
+    const stack = errorObj.stack || '';
+    const isNetworkError = error instanceof TypeError && errorObj.message.includes('NetworkError');
 
     // Log error to monitoring service
-    this.loggingService.logError(message, { stack, error });
+    this._loggingService.logError(message, { stack, error });
 
     // Handle the error in the Angular zone to trigger change detection
-    this.ngZone.run(() => {
+    this._ngZone.run(() => {
       if (isNetworkError) {
-        this.toastService.showError('Network error. Please check your connection and try again.');
+        this._toastService.showError('Network error. Please check your connection and try again.');
       } else {
-        this.toastService.showError('An unexpected error occurred. Our team has been notified.');
+        this._toastService.showError('An unexpected error occurred. Our team has been notified.');
       }
 
       // For critical errors, navigate to error page
-      if (this.isCriticalError(error)) {
-        this.router.navigate(['/error'], {
+      if (this._isCriticalError(error)) {
+        this._router.navigate(['/error'], {
           queryParams: {
-            id: this.loggingService.getLastErrorId()
+            id: this._loggingService.getLastErrorId()
           }
         });
       }
@@ -41,7 +42,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     console.error('Global error handler caught an error:', error);
   }
 
-  private isCriticalError(error: any): boolean {
+  private _isCriticalError(error: unknown): boolean {
     // Determine if this is a critical error that should redirect to error page
     const criticalErrorPatterns = [
       'ChunkLoadError', // Failed to load a critical JS chunk
@@ -53,9 +54,12 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     if (!error) return false;
 
+    const errorObj = error instanceof Error ? error : null;
+    if (!errorObj) return false;
+
     // Check if error message contains any critical patterns
     return criticalErrorPatterns.some(
-      pattern => error.message?.includes(pattern) || error.stack?.includes(pattern)
+      pattern => errorObj.message?.includes(pattern) || errorObj.stack?.includes(pattern)
     );
   }
 }

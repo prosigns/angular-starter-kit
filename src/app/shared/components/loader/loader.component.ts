@@ -94,5 +94,5 @@ import { LoaderService } from '../../../core/services/loader.service';
   ]
 })
 export class LoaderComponent {
-  loaderService = inject(LoaderService);
+  public readonly loaderService = inject(LoaderService);
 }

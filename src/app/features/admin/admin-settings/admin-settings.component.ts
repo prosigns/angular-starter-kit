@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -127,9 +127,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   ]
 })
 export class AdminSettingsComponent {
-  settingsForm: FormGroup;
+  public settingsForm: FormGroup;
+  private _fb = inject(FormBuilder);
 
-  constructor(private _fb: FormBuilder) {
+  constructor() {
     this.settingsForm = this._fb.group({
       siteName: ['Angular Starter Kit', Validators.required],
       siteUrl: ['https://example.com', Validators.required],
@@ -140,10 +141,10 @@ export class AdminSettingsComponent {
     });
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.settingsForm.valid) {
       // Save settings - in a real app, this would be handled by a service
-      console.log('Settings saved:', this.settingsForm.value);
+      // Settings saved successfully
       alert('Settings saved successfully!');
     }
   }

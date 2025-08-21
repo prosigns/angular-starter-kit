@@ -1,16 +1,16 @@
 import { Injectable, signal } from '@angular/core';
 
-export enum ToastType {
-  SUCCESS = 'success',
-  ERROR = 'error',
-  INFO = 'info',
-  WARNING = 'warning'
+export enum ToastTypeEnum {
+  success = 'success',
+  error = 'error',
+  info = 'info',
+  warning = 'warning'
 }
 
-export interface Toast {
+export interface IToast {
   id: string;
   message: string;
-  type: ToastType;
+  type: ToastTypeEnum;
   duration: number;
   createdAt: Date;
 }
@@ -20,28 +20,36 @@ export interface Toast {
 })
 export class ToastService {
   // Signal to store active toasts
-  readonly toasts = signal<Toast[]>([]);
+  public readonly toasts = signal<IToast[]>([]);
 
-  showSuccess(message: string, duration = 5000): void {
-    this.showToast(message, ToastType.SUCCESS, duration);
+  public showSuccess(message: string, duration = 5000): void {
+    this._showToast(message, ToastTypeEnum.success, duration);
   }
 
-  showError(message: string, duration = 7000): void {
-    this.showToast(message, ToastType.ERROR, duration);
+  public showError(message: string, duration = 7000): void {
+    this._showToast(message, ToastTypeEnum.error, duration);
   }
 
-  showInfo(message: string, duration = 5000): void {
-    this.showToast(message, ToastType.INFO, duration);
+  public showInfo(message: string, duration = 5000): void {
+    this._showToast(message, ToastTypeEnum.info, duration);
   }
 
-  showWarning(message: string, duration = 6000): void {
-    this.showToast(message, ToastType.WARNING, duration);
+  public showWarning(message: string, duration = 6000): void {
+    this._showToast(message, ToastTypeEnum.warning, duration);
   }
 
-  private showToast(message: string, type: ToastType, duration: number): void {
-    const id = this.generateId();
+  public removeToast(id: string): void {
+    this.toasts.update(currentToasts => currentToasts.filter(toast => toast.id !== id));
+  }
 
-    const toast: Toast = {
+  public clearAll(): void {
+    this.toasts.set([]);
+  }
+
+  private _showToast(message: string, type: ToastTypeEnum, duration: number): void {
+    const id = this._generateId();
+
+    const toast: IToast = {
       id,
       message,
       type,
@@ -58,15 +66,7 @@ export class ToastService {
     }, duration);
   }
 
-  removeToast(id: string): void {
-    this.toasts.update(currentToasts => currentToasts.filter(toast => toast.id !== id));
-  }
-
-  clearAll(): void {
-    this.toasts.set([]);
-  }
-
-  private generateId(): string {
+  private _generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
   }
 }

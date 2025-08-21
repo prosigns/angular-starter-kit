@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-export enum LogLevel {
-  DEBUG = 'DEBUG',
-  INFO = 'INFO',
-  WARN = 'WARN',
-  ERROR = 'ERROR',
-  FATAL = 'FATAL'
+export enum LogLevelEnum {
+  debug = 'DEBUG',
+  info = 'INFO',
+  warn = 'WARN',
+  error = 'ERROR',
+  fatal = 'FATAL'
 }
 
-export interface LogEntry {
+export interface ILogEntry {
   timestamp: string;
-  level: LogLevel;
+  level: LogLevelEnum;
   message: string;
-  data?: any;
+  data?: unknown;
   userId?: string;
   sessionId?: string;
   url?: string;
@@ -28,38 +28,40 @@ export interface LogEntry {
   providedIn: 'root'
 })
 export class LoggingService {
-  private readonly API_URL = `${environment.apiUrl}/logs`;
-  private lastErrorId: string | null = null;
+  private readonly _apiUrl = `${environment.apiUrl}/logs`;
+  private _lastErrorId: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  private readonly _http = inject(HttpClient);
 
-  debug(message: string, data?: any): void {
-    this.log(LogLevel.DEBUG, message, data);
+  constructor() {}
+
+  public debug(message: string, data?: unknown): void {
+    this._log(LogLevelEnum.debug, message, data);
   }
 
-  info(message: string, data?: any): void {
-    this.log(LogLevel.INFO, message, data);
+  public info(message: string, data?: unknown): void {
+    this._log(LogLevelEnum.info, message, data);
   }
 
-  warn(message: string, data?: any): void {
-    this.log(LogLevel.WARN, message, data);
+  public warn(message: string, data?: unknown): void {
+    this._log(LogLevelEnum.warn, message, data);
   }
 
-  error(message: string, data?: any): void {
-    this.log(LogLevel.ERROR, message, data);
+  public error(message: string, data?: unknown): void {
+    this._log(LogLevelEnum.error, message, data);
   }
 
-  fatal(message: string, data?: any): void {
-    this.log(LogLevel.FATAL, message, data);
+  public fatal(message: string, data?: unknown): void {
+    this._log(LogLevelEnum.fatal, message, data);
   }
 
-  logError(message: string, error?: any): string {
-    const errorId = this.generateErrorId();
-    this.lastErrorId = errorId;
+  public logError(message: string, error?: unknown): string {
+    const errorId = this._generateErrorId();
+    this._lastErrorId = errorId;
 
-    const logEntry: LogEntry = {
+    const logEntry: ILogEntry = {
       timestamp: new Date().toISOString(),
-      level: LogLevel.ERROR,
+      level: LogLevelEnum.error,
       message,
       data: error,
       url: window.location.href,
@@ -69,23 +71,24 @@ export class LoggingService {
 
     // Only send to server in production
     if (environment.production) {
-      this.sendToServer(logEntry).subscribe();
+      this._sendToServer(logEntry).subscribe();
     }
 
     // Always log to console in development
     if (!environment.production) {
+      // eslint-disable-next-line no-console
       console.error(`[ERROR] ${message}`, error);
     }
 
     return errorId;
   }
 
-  getLastErrorId(): string | null {
-    return this.lastErrorId;
+  public getLastErrorId(): string | null {
+    return this._lastErrorId;
   }
 
-  private log(level: LogLevel, message: string, data?: any): void {
-    const logEntry: LogEntry = {
+  private _log(level: LogLevelEnum, message: string, data?: unknown): void {
+    const logEntry: ILogEntry = {
       timestamp: new Date().toISOString(),
       level,
       message,
@@ -97,53 +100,58 @@ export class LoggingService {
     // Only send INFO and higher to server in production
     if (
       environment.production &&
-      (level === LogLevel.INFO ||
-        level === LogLevel.WARN ||
-        level === LogLevel.ERROR ||
-        level === LogLevel.FATAL)
+      (level === LogLevelEnum.info ||
+        level === LogLevelEnum.warn ||
+        level === LogLevelEnum.error ||
+        level === LogLevelEnum.fatal)
     ) {
-      this.sendToServer(logEntry).subscribe();
+      this._sendToServer(logEntry).subscribe();
     }
 
     // Always log to console in development
     if (!environment.production) {
-      this.logToConsole(logEntry);
+      this._logToConsole(logEntry);
     }
   }
 
-  private sendToServer(logEntry: LogEntry): Observable<any> {
-    return this.http.post(`${this.API_URL}`, logEntry).pipe(
+  private _sendToServer(logEntry: ILogEntry): Observable<unknown> {
+    return this._http.post(`${this._apiUrl}`, logEntry).pipe(
       catchError(error => {
         // Fallback to console if server logging fails
+        // eslint-disable-next-line no-console
         console.error('Failed to send log to server:', error);
-        this.logToConsole(logEntry);
+        this._logToConsole(logEntry);
         return of(null);
       })
     );
   }
 
-  private logToConsole(logEntry: LogEntry): void {
+  private _logToConsole(logEntry: ILogEntry): void {
     const { level, message, data } = logEntry;
+    const timestamp = new Date(logEntry.timestamp).toLocaleTimeString();
 
     switch (level) {
-      case LogLevel.DEBUG:
-        console.debug(`[DEBUG] ${message}`, data);
+      case LogLevelEnum.debug:
+        // eslint-disable-next-line no-console
+        console.debug(`[${timestamp}] DEBUG: ${message}`, data);
         break;
-      case LogLevel.INFO:
-        console.info(`[INFO] ${message}`, data);
+      case LogLevelEnum.info:
+        // eslint-disable-next-line no-console
+        console.info(`[${timestamp}] INFO: ${message}`, data);
         break;
-      case LogLevel.WARN:
-        console.warn(`[WARN] ${message}`, data);
+      case LogLevelEnum.warn:
+        // eslint-disable-next-line no-console
+        console.warn(`[${timestamp}] WARN: ${message}`, data);
         break;
-      case LogLevel.ERROR:
-      case LogLevel.FATAL:
-        console.error(`[${level}] ${message}`, data);
+      case LogLevelEnum.error:
+      case LogLevelEnum.fatal:
+        // eslint-disable-next-line no-console
+        console.error(`[${timestamp}] ${level}: ${message}`, data);
         break;
     }
   }
 
-  private generateErrorId(): string {
-    // Generate a random ID for error tracking
-    return 'err_' + Math.random().toString(36).substring(2, 15);
+  private _generateErrorId(): string {
+    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 }

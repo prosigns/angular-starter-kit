@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -140,12 +140,11 @@ import { Router, RouterLink } from '@angular/router';
   ]
 })
 export class LoginComponent {
-  loginForm: FormGroup;
+  public loginForm: FormGroup;
+  private readonly _fb = inject(FormBuilder);
+  private readonly _router = inject(Router);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _router: Router
-  ) {
+  constructor() {
     this.loginForm = this._fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -153,10 +152,10 @@ export class LoginComponent {
     });
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.loginForm.valid) {
       // In a real app, this would call an authentication service
-      console.log('Login attempt:', this.loginForm.value);
+      // Login attempt submitted
 
       // Navigate to dashboard on successful login
       this._router.navigate(['/dashboard']);

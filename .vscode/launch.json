@@ -3,22 +3,32 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Chrome",
+      "name": "🚀 Launch Angular App",
       "type": "chrome",
       "request": "launch",
+      "preLaunchTask": "npm: start",
       "url": "http://localhost:4200",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/src/*",
+        "/*": "*",
+        "/./~/*": "${webRoot}/node_modules/*"
+      }
     },
     {
-      "name": "Attach to Chrome",
+      "name": "🔗 Attach to Chrome",
       "type": "chrome",
       "request": "attach",
       "port": 9222,
       "url": "http://localhost:4200/*",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true
     },
     {
-      "name": "Angular Test",
+      "name": "🧪 Debug Angular Tests",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:9876/debug.html",
@@ -33,11 +43,44 @@
       }
     },
     {
-      "name": "ng serve",
+      "name": "🏗️ Build and Launch",
       "type": "chrome",
       "request": "launch",
-      "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "preLaunchTask": "npm: build",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "🔍 Launch with Lint Check",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: lint",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "🌐 Launch Production Build",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "npm: build:prod",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "🐛 Debug Current File",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "breakOnLoad": true,
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/src/*",
+        "/*": "*",
+        "/./~/*": "${webRoot}/node_modules/*"
+      }
     }
   ]
 }

@@ -1,4 +1,4 @@
-export interface ApiResponse<T> {
+export interface IApiResponse<T> {
   success: boolean;
   data: T;
   message?: string;
@@ -6,7 +6,7 @@ export interface ApiResponse<T> {
   statusCode: number;
 }
 
-export interface PaginatedResponse<T> {
+export interface IPaginatedResponse<T> {
   items: T[];
   total: number;
   page: number;
@@ -14,24 +14,24 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface QueryParams {
+export interface IQueryParams {
   page?: number;
   pageSize?: number;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
   search?: string;
-  filters?: Record<string, any>;
+  filters?: Record<string, string | number | boolean>;
 }
 
-export interface ErrorResponse {
+export interface IErrorResponse {
   message: string;
   statusCode: number;
   timestamp: string;
   path: string;
-  errors?: ValidationError[];
+  errors?: IValidationError[];
 }
 
-export interface ValidationError {
+export interface IValidationError {
   field: string;
   message: string;
 }

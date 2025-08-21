@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -299,10 +299,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   ]
 })
 export class ProfileComponent {
-  profileForm: FormGroup;
-  passwordForm: FormGroup;
+  public profileForm: FormGroup;
+  public passwordForm: FormGroup;
+  private readonly _fb = inject(FormBuilder);
 
-  constructor(private _fb: FormBuilder) {
+  constructor() {
     this.profileForm = this._fb.group({
       firstName: ['John', Validators.required],
       lastName: ['Doe', Validators.required],
@@ -321,7 +322,7 @@ export class ProfileComponent {
     );
   }
 
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
+  public passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
     const newPassword = form.get('newPassword')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
 
@@ -331,25 +332,25 @@ export class ProfileComponent {
     return null;
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.profileForm.valid) {
       // In a real app, this would call a service to update profile
-      console.log('Profile updated:', this.profileForm.value);
+      // Profile updated successfully
       alert('Profile updated successfully!');
       this.profileForm.markAsPristine();
     }
   }
 
-  changePassword(): void {
+  public changePassword(): void {
     if (this.passwordForm.valid) {
       // In a real app, this would call a service to change password
-      console.log('Password change:', this.passwordForm.value);
+      // Password changed successfully
       alert('Password changed successfully!');
       this.resetPasswordForm();
     }
   }
 
-  resetForm(): void {
+  public resetForm(): void {
     this.profileForm.setValue({
       firstName: 'John',
       lastName: 'Doe',
@@ -360,7 +361,7 @@ export class ProfileComponent {
     this.profileForm.markAsPristine();
   }
 
-  resetPasswordForm(): void {
+  public resetPasswordForm(): void {
     this.passwordForm.reset();
   }
 }

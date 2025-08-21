@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 
-import { ToastService, ToastType } from '../../../core/services/toast.service';
+import { ToastService, ToastTypeEnum } from '../../../core/services/toast.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
@@ -17,7 +17,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
           >
             <div class="toast-icon">
               @switch (toast.type) {
-                @case (toastTypes.SUCCESS) {
+                @case (toastTypes.success) {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -32,7 +32,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 }
-                @case (toastTypes.ERROR) {
+                @case (toastTypes.error) {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -48,7 +48,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>
                 }
-                @case (toastTypes.WARNING) {
+                @case (toastTypes.warning) {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -61,13 +61,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
                     stroke-linejoin="round"
                   >
                     <path
-                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3
+                         L13.71 3.86a2 2 0 0 0-3.42 0z"
                     ></path>
                     <line x1="12" y1="9" x2="12" y2="13"></line>
                     <line x1="12" y1="17" x2="12.01" y2="17"></line>
                   </svg>
                 }
-                @case (toastTypes.INFO) {
+                @case (toastTypes.info) {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -250,15 +251,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ]
 })
 export class ToastComponent {
-  private toastService = inject(ToastService);
-
-  // Use a computed signal to access the toasts
-  readonly visibleToasts = computed(() => this.toastService.toasts());
-
   // Make toast types available in the template
-  readonly toastTypes = ToastType;
+  public readonly toastTypes = ToastTypeEnum;
+  // Use a computed signal to access the toasts
+  public readonly visibleToasts = computed(() => this._toastService.toasts());
 
-  removeToast(id: string): void {
-    this.toastService.removeToast(id);
+  private readonly _toastService = inject(ToastService);
+
+  public removeToast(id: string): void {
+    this._toastService.removeToast(id);
   }
 }

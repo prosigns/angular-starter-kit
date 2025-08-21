@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -156,26 +156,25 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   ]
 })
 export class ResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
-  submitted = false;
-  invalidToken = false;
-  resetToken = '';
+  public resetPasswordForm: FormGroup;
+  public submitted = false;
+  public invalidToken = false;
+  public resetToken = '';
+  private _fb = inject(FormBuilder);
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor() {
     this.resetPasswordForm = this._fb.group(
       {
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmPassword: ['', Validators.required]
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this._passwordMatchValidator }
     );
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // Get token from URL
     this._route.queryParams.subscribe(params => {
       this.resetToken = params['token'] || '';
@@ -187,23 +186,10 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
-
-    if (password && confirmPassword && password !== confirmPassword) {
-      return { passwordMismatch: true };
-    }
-    return null;
-  }
-
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.resetPasswordForm.valid && !this.invalidToken) {
       // In a real app, this would call an authentication service with the token
-      console.log('Password reset:', {
-        token: this.resetToken,
-        ...this.resetPasswordForm.value
-      });
+      // Password reset request processed
 
       // Show success message
       this.submitted = true;
@@ -213,5 +199,15 @@ export class ResetPasswordComponent implements OnInit {
         this._router.navigate(['/auth/login']);
       }, 5000);
     }
+  }
+
+  private _passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 }
