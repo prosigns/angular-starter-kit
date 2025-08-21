@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, RendererFactory2, inject, signal, DOCUMENT } from '@angular/core';
+import { Injectable, RendererFactory2, inject, signal, DOCUMENT } from '@angular/core';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -6,40 +6,36 @@ export type Theme = 'light' | 'dark' | 'system';
   providedIn: 'root'
 })
 export class ThemeService {
-  private document = inject(DOCUMENT);
-  private renderer: Renderer2;
-  private window = window;
-
-  private readonly THEME_KEY = 'app-theme';
-
   // Signal to track current theme
-  readonly currentTheme = signal<Theme>('system');
+  public readonly currentTheme = signal<Theme>('system');
 
-  constructor(rendererFactory: RendererFactory2) {
-    this.renderer = rendererFactory.createRenderer(null, null);
-  }
+  private _document = inject(DOCUMENT);
+  private _renderer = inject(RendererFactory2).createRenderer(null, null);
+  private _window = window;
 
-  initializeTheme(): void {
+  private readonly _themeKey = 'app-theme';
+
+  public initializeTheme(): void {
     // Get saved theme or default to system
-    const savedTheme = (localStorage.getItem(this.THEME_KEY) as Theme) || 'system';
+    const savedTheme = (localStorage.getItem(this._themeKey) as Theme) || 'system';
     this.setTheme(savedTheme);
 
     // Listen for system preference changes
-    this.listenForSystemPreferenceChanges();
+    this._listenForSystemPreferenceChanges();
   }
 
-  setTheme(theme: Theme): void {
+  public setTheme(theme: Theme): void {
     this.currentTheme.set(theme);
-    localStorage.setItem(this.THEME_KEY, theme);
+    localStorage.setItem(this._themeKey, theme);
 
     if (theme === 'system') {
-      this.applySystemTheme();
+      this._applySystemTheme();
     } else {
-      this.applyTheme(theme);
+      this._applyTheme(theme);
     }
   }
 
-  toggleTheme(): void {
+  public toggleTheme(): void {
     const theme = this.currentTheme();
     if (theme === 'light') {
       this.setTheme('dark');
@@ -47,61 +43,61 @@ export class ThemeService {
       this.setTheme('light');
     } else {
       // If system is active, toggle to explicit light/dark based on current system preference
-      const systemTheme = this.getSystemTheme();
+      const systemTheme = this._getSystemTheme();
       this.setTheme(systemTheme === 'dark' ? 'light' : 'dark');
     }
   }
 
-  getCurrentThemeClass(): string {
+  public getCurrentThemeClass(): string {
     if (this.currentTheme() !== 'system') {
       return this.currentTheme();
     }
-    return this.getSystemTheme();
+    return this._getSystemTheme();
   }
 
-  private applyTheme(theme: 'light' | 'dark'): void {
+  private _applyTheme(theme: 'light' | 'dark'): void {
     // Remove current theme classes
-    this.renderer.removeClass(this.document.documentElement, 'light');
-    this.renderer.removeClass(this.document.documentElement, 'dark');
+    this._renderer.removeClass(this._document.documentElement, 'light');
+    this._renderer.removeClass(this._document.documentElement, 'dark');
 
     // Add new theme class
-    this.renderer.addClass(this.document.documentElement, theme);
+    this._renderer.addClass(this._document.documentElement, theme);
 
     // Update color scheme meta tag
-    this.updateColorSchemeMeta(theme);
+    this._updateColorSchemeMeta(theme);
   }
 
-  private applySystemTheme(): void {
-    const systemTheme = this.getSystemTheme();
-    this.applyTheme(systemTheme);
+  private _applySystemTheme(): void {
+    const systemTheme = this._getSystemTheme();
+    this._applyTheme(systemTheme);
   }
 
-  private getSystemTheme(): 'light' | 'dark' {
-    if (this.window?.matchMedia('(prefers-color-scheme: dark)').matches) {
+  private _getSystemTheme(): 'light' | 'dark' {
+    if (this._window?.matchMedia('(prefers-color-scheme: dark)').matches) {
       return 'dark';
     }
     return 'light';
   }
 
-  private listenForSystemPreferenceChanges(): void {
-    this.window?.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  private _listenForSystemPreferenceChanges(): void {
+    this._window?.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
       if (this.currentTheme() === 'system') {
-        this.applyTheme(e.matches ? 'dark' : 'light');
+        this._applyTheme(e.matches ? 'dark' : 'light');
       }
     });
   }
 
-  private updateColorSchemeMeta(theme: 'light' | 'dark'): void {
+  private _updateColorSchemeMeta(theme: 'light' | 'dark'): void {
     // Find the meta tag or create it if it doesn't exist
-    let metaTag = this.document.querySelector('meta[name="color-scheme"]');
+    let metaTag = this._document.querySelector('meta[name="color-scheme"]');
 
     if (!metaTag) {
-      metaTag = this.document.createElement('meta');
-      this.renderer.setAttribute(metaTag, 'name', 'color-scheme');
-      this.renderer.appendChild(this.document.head, metaTag);
+      metaTag = this._document.createElement('meta');
+      this._renderer.setAttribute(metaTag, 'name', 'color-scheme');
+      this._renderer.appendChild(this._document.head, metaTag);
     }
 
     // Update value
-    this.renderer.setAttribute(metaTag, 'content', theme);
+    this._renderer.setAttribute(metaTag, 'content', theme);
   }
 }

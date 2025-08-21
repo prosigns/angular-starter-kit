@@ -11,7 +11,7 @@ import { delay, mergeMap } from 'rxjs/operators';
  */
 @Injectable({ providedIn: 'root' })
 export class CustomPreloadingStrategy implements PreloadingStrategy {
-  preload(route: Route, load: () => Observable<any>): Observable<any> {
+  public preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {
     // Skip preloading if explicitly set to false or not defined
     if (route.data?.['preload'] === false) {
       return of(null);
@@ -26,7 +26,7 @@ export class CustomPreloadingStrategy implements PreloadingStrategy {
       // Priority 0 = no delay, priority 100 = 10 second delay
       const delayMs = Math.max(0, 100 - priority) * 100;
 
-      console.debug(`Preloading ${route.path} with priority ${priority} (delay: ${delayMs}ms)`);
+      // Preloading route with calculated priority and delay
 
       // Preload after the calculated delay
       return of(true).pipe(

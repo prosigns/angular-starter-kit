@@ -5,7 +5,7 @@ import { map, take } from 'rxjs/operators';
 import { ToastService } from '../services/toast.service';
 
 export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
-  return (route, state) => {
+  return () => {
     const authService = inject(AuthService);
     const router = inject(Router);
     const toastService = inject(ToastService);
