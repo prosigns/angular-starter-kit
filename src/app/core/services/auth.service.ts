@@ -1,12 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import {
-  AuthTokens,
-  LoginCredentials,
-  RegisterCredentials,
-  UserProfile
+  IAuthTokens,
+  ILoginCredentials,
+  IRegisterCredentials,
+  IUserProfile
 } from '../models/auth.model';
 import { TokenService } from './token.service';
 import { environment } from '../../../environments/environment';
@@ -15,126 +15,133 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private tokenService = inject(TokenService);
-  private router = inject(Router);
+  // Signals for reactive approach
+  public readonly isAuthenticated = signal<boolean>(false);
+  public readonly userProfile = signal<IUserProfile | null>(null);
 
-  private readonly apiUrl = `${environment.apiUrl}/auth`;
+  // Observables for backward compatibility - must be declared before private fields
+  public readonly userProfile$: Observable<IUserProfile | null>;
+  public readonly isAuthenticated$: Observable<boolean>;
+  public readonly userRoles$: Observable<string[]>;
+
+  // Private dependencies and configuration
+  private _http = inject(HttpClient);
+  private _tokenService = inject(TokenService);
+  private _router = inject(Router);
+  private readonly _apiUrl = `${environment.apiUrl}/auth`;
 
   // User authentication state observables
-  private userProfileSubject = new BehaviorSubject<UserProfile | null>(null);
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  private userRolesSubject = new BehaviorSubject<string[]>([]);
+  private _userProfileSubject = new BehaviorSubject<IUserProfile | null>(null);
+  private _isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private _userRolesSubject = new BehaviorSubject<string[]>([]);
 
-  // Signals for reactive approach
-  readonly isAuthenticated = signal<boolean>(false);
-  readonly userProfile = signal<UserProfile | null>(null);
-
-  // Observables for backward compatibility
-  readonly userProfile$ = this.userProfileSubject.asObservable();
-  readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  readonly userRoles$ = this.userRolesSubject.asObservable();
+  constructor() {
+    // Initialize observables after subjects are created
+    this.userProfile$ = this._userProfileSubject.asObservable();
+    this.isAuthenticated$ = this._isAuthenticatedSubject.asObservable();
+    this.userRoles$ = this._userRolesSubject.asObservable();
+  }
 
   // Initialize authentication state from stored token
-  initAuth(): Promise<boolean> {
+  public initAuth(): Promise<boolean> {
     // Check for a valid token
-    if (this.tokenService.isTokenValid()) {
+    if (this._tokenService.isTokenValid()) {
       // Attempt to load user profile with the stored token
       return this.getCurrentUser()
         .toPromise()
         .then(() => true)
         .catch(() => {
           // If loading user fails, clear authentication
-          this.clearAuthState();
+          this._clearAuthState();
           return false;
         });
     } else {
       // No valid token, clear any stale auth data
-      this.clearAuthState();
+      this._clearAuthState();
       return Promise.resolve(false);
     }
   }
 
-  login(credentials: LoginCredentials): Observable<UserProfile> {
-    return this.http
-      .post<{ tokens: AuthTokens; user: UserProfile }>(`${this.apiUrl}/login`, credentials)
+  public login(credentials: ILoginCredentials): Observable<IUserProfile> {
+    return this._http
+      .post<{ tokens: IAuthTokens; user: IUserProfile }>(`${this._apiUrl}/login`, credentials)
       .pipe(
         tap(response => {
-          this.tokenService.setTokens(response.tokens);
-          this.updateAuthState(response.user);
+          this._tokenService.setTokens(response.tokens);
+          this._updateAuthState(response.user);
         }),
         map(response => response.user)
       );
   }
 
-  register(userData: RegisterCredentials): Observable<UserProfile> {
-    return this.http
-      .post<{ tokens: AuthTokens; user: UserProfile }>(`${this.apiUrl}/register`, userData)
+  public register(userData: IRegisterCredentials): Observable<IUserProfile> {
+    return this._http
+      .post<{ tokens: IAuthTokens; user: IUserProfile }>(`${this._apiUrl}/register`, userData)
       .pipe(
         tap(response => {
-          this.tokenService.setTokens(response.tokens);
-          this.updateAuthState(response.user);
+          this._tokenService.setTokens(response.tokens);
+          this._updateAuthState(response.user);
         }),
         map(response => response.user)
       );
   }
 
-  logout(): void {
+  public logout(): void {
     // Call logout API to invalidate refresh token
-    this.http
-      .post(`${this.apiUrl}/logout`, {})
+    this._http
+      .post(`${this._apiUrl}/logout`, {})
       .pipe(catchError(() => of(null)))
       .subscribe(() => {
-        this.clearAuthState();
-        this.router.navigate(['/auth/login']);
+        this._clearAuthState();
+        this._router.navigate(['/auth/login']);
       });
   }
 
-  refreshToken(): Observable<AuthTokens> {
-    const refreshToken = this.tokenService.getRefreshToken();
+  public refreshToken(): Observable<IAuthTokens> {
+    const refreshToken = this._tokenService.getRefreshToken();
 
     if (!refreshToken) {
       return throwError(() => new Error('No refresh token available'));
     }
 
-    return this.http
-      .post<{ tokens: AuthTokens }>(`${this.apiUrl}/refresh`, { refreshToken })
+    return this._http
+      .post<{ tokens: IAuthTokens }>(`${this._apiUrl}/refresh`, { refreshToken })
       .pipe(map(response => response.tokens));
   }
 
-  getCurrentUser(): Observable<UserProfile> {
-    return this.http.get<{ user: UserProfile }>(`${this.apiUrl}/me`).pipe(
+  public getCurrentUser(): Observable<IUserProfile> {
+    return this._http.get<{ user: IUserProfile }>(`${this._apiUrl}/me`).pipe(
       map(response => response.user),
-      tap(user => this.updateAuthState(user))
+      tap(user => this._updateAuthState(user))
     );
   }
 
-  requestPasswordReset(email: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/forgot-password`, { email });
+  public requestPasswordReset(email: string): Observable<void> {
+    return this._http.post<void>(`${this._apiUrl}/forgot-password`, { email });
   }
 
-  resetPassword(token: string, newPassword: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/reset-password`, {
+  public resetPassword(token: string, newPassword: string): Observable<void> {
+    return this._http.post<void>(`${this._apiUrl}/reset-password`, {
       token,
       newPassword
     });
   }
 
-  private updateAuthState(user: UserProfile): void {
-    this.userProfileSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
-    this.userRolesSubject.next(user.roles || []);
+  private _updateAuthState(user: IUserProfile): void {
+    this._userProfileSubject.next(user);
+    this._isAuthenticatedSubject.next(true);
+    this._userRolesSubject.next(user.roles || []);
 
     // Update signals
     this.isAuthenticated.set(true);
     this.userProfile.set(user);
   }
 
-  private clearAuthState(): void {
-    this.tokenService.clearTokens();
-    this.userProfileSubject.next(null);
-    this.isAuthenticatedSubject.next(false);
-    this.userRolesSubject.next([]);
+  private _clearAuthState(): void {
+    this._tokenService.clearTokens();
+    this._userProfileSubject.next(null);
+    this._isAuthenticatedSubject.next(false);
+    this._userRolesSubject.next([]);
 
     // Update signals
     this.isAuthenticated.set(false);

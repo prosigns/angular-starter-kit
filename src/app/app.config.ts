@@ -28,7 +28,7 @@ import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { AuthService } from './core/services/auth.service';
 
 // AoT requires an exported function for factories
-export function createTranslateLoader(http: HttpClient) {
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -159,12 +159,11 @@ import { Router, RouterLink } from '@angular/router';
   ]
 })
 export class RegisterComponent {
-  registerForm: FormGroup;
+  public registerForm: FormGroup;
+  private _fb = inject(FormBuilder);
+  private _router = inject(Router);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _router: Router
-  ) {
+  constructor() {
     this.registerForm = this._fb.group(
       {
         name: ['', Validators.required],
@@ -173,11 +172,21 @@ export class RegisterComponent {
         confirmPassword: ['', Validators.required],
         terms: [false, Validators.requiredTrue]
       },
-      { validators: this.passwordMatchValidator }
+      { validators: this._passwordMatchValidator }
     );
   }
 
-  passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
+  public onSubmit(): void {
+    if (this.registerForm.valid) {
+      // In a real app, this would call an authentication service
+      // Registration form submitted
+
+      // Navigate to login on successful registration
+      this._router.navigate(['/auth/login']);
+    }
+  }
+
+  private _passwordMatchValidator(form: FormGroup): { [key: string]: boolean } | null {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
 
@@ -185,15 +194,5 @@ export class RegisterComponent {
       return { passwordMismatch: true };
     }
     return null;
-  }
-
-  onSubmit(): void {
-    if (this.registerForm.valid) {
-      // In a real app, this would call an authentication service
-      console.log('Registration:', this.registerForm.value);
-
-      // Navigate to login on successful registration
-      this._router.navigate(['/auth/login']);
-    }
   }
 }

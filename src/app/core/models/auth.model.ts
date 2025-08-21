@@ -1,23 +1,23 @@
-export interface AuthTokens {
+export interface IAuthTokens {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
 }
 
-export interface LoginCredentials {
+export interface ILoginCredentials {
   email: string;
   password: string;
   rememberMe?: boolean;
 }
 
-export interface RegisterCredentials {
+export interface IRegisterCredentials {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
 }
 
-export interface UserProfile {
+export interface IUserProfile {
   id: string;
   email: string;
   firstName: string;
@@ -28,7 +28,7 @@ export interface UserProfile {
   updatedAt: Date;
 }
 
-export interface PasswordReset {
+export interface IPasswordReset {
   email: string;
   token: string;
   newPassword: string;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -104,15 +104,14 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   ]
 })
 export class UserFormComponent {
-  userForm: FormGroup;
-  isEditMode = false;
-  userId?: number;
+  public userForm: FormGroup;
+  public isEditMode = false;
+  public userId?: number;
+  private _fb = inject(FormBuilder);
+  private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
 
-  constructor(
-    private _fb: FormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor() {
     this.userForm = this._fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -125,12 +124,20 @@ export class UserFormComponent {
         this.isEditMode = true;
         this.userId = +params['id'];
         // In a real app, you would fetch user data here
-        this.populateForm();
+        this._populateForm();
       }
     });
   }
 
-  populateForm(): void {
+  public onSubmit(): void {
+    if (this.userForm.valid) {
+      // Save user - in a real app, this would be handled by a service
+      // Form submitted successfully
+      this._router.navigate(['../../'], { relativeTo: this._route });
+    }
+  }
+
+  private _populateForm(): void {
     // Mock data - in a real app, this would come from a service
     const userData = {
       name: 'John Doe',
@@ -139,13 +146,5 @@ export class UserFormComponent {
       status: 'active'
     };
     this.userForm.patchValue(userData);
-  }
-
-  onSubmit(): void {
-    if (this.userForm.valid) {
-      // Save user - in a real app, this would be handled by a service
-      console.log('Form submitted:', this.userForm.value);
-      this._router.navigate(['../../'], { relativeTo: this._route });
-    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -395,13 +395,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   ]
 })
 export class SettingsComponent {
-  activeSection = 'account';
-  accountForm: FormGroup;
-  notificationForm: FormGroup;
-  privacyForm: FormGroup;
-  appearanceForm: FormGroup;
+  public activeSection = 'account';
+  public accountForm: FormGroup;
+  public notificationForm: FormGroup;
+  public privacyForm: FormGroup;
+  public appearanceForm: FormGroup;
+  private _fb = inject(FormBuilder);
 
-  constructor(private _fb: FormBuilder) {
+  constructor() {
     this.accountForm = this._fb.group({
       twoFactorAuth: [false],
       language: ['en'],
@@ -428,11 +429,11 @@ export class SettingsComponent {
     });
   }
 
-  setActiveSection(section: string): void {
+  public setActiveSection(section: string): void {
     this.activeSection = section;
   }
 
-  saveSettings(formType: string): void {
+  public saveSettings(formType: string): void {
     let form: FormGroup;
 
     switch (formType) {
@@ -454,7 +455,7 @@ export class SettingsComponent {
 
     if (form.valid) {
       // In a real app, this would call a service to save settings
-      console.log(`${formType} settings saved:`, form.value);
+      // Settings saved successfully
       alert('Settings saved successfully!');
     }
   }

@@ -1,29 +1,25 @@
-import { AfterViewInit, Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, inject } from '@angular/core';
 
 @Directive({
   selector: 'img[appLazyImage]',
   standalone: true
 })
 export class LazyImageDirective implements AfterViewInit, OnDestroy {
-  @HostBinding('attr.loading') loading = 'lazy';
-  @Input() appLazyImage: string | undefined;
+  @Input() public loading = 'lazy';
+  @Input() public appLazyImage = '';
 
-  private observer: IntersectionObserver | undefined;
-  private element: HTMLImageElement;
+  private _observer!: IntersectionObserver;
+  private readonly _element = inject(ElementRef);
 
-  constructor(private el: ElementRef) {
-    this.element = this.el.nativeElement;
-  }
-
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     // If IntersectionObserver is available, use it for better performance
     if ('IntersectionObserver' in window) {
-      this.observer = new IntersectionObserver(
+      this._observer = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              this.loadImage();
-              this.observer?.unobserve(this.element);
+              this._loadImage();
+              this._observer?.unobserve(this._element.nativeElement);
             }
           });
         },
@@ -32,31 +28,32 @@ export class LazyImageDirective implements AfterViewInit, OnDestroy {
         }
       );
 
-      this.observer.observe(this.element);
+      this._observer.observe(this._element.nativeElement);
     } else {
       // Fallback for browsers without IntersectionObserver
-      this.loadImage();
+      this._loadImage();
     }
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     // Clean up observer when directive is destroyed
-    if (this.observer) {
-      this.observer.disconnect();
+    if (this._observer) {
+      this._observer.disconnect();
     }
   }
 
-  private loadImage(): void {
+  private _loadImage(): void {
+    const img = this._element.nativeElement as HTMLImageElement;
     // Set the actual image source
     if (this.appLazyImage) {
-      this.element.src = this.appLazyImage;
+      img.src = this.appLazyImage;
     }
 
     // Apply fade-in animation
-    this.element.style.opacity = '0';
-    this.element.onload = () => {
-      this.element.style.transition = 'opacity 0.3s ease-in';
-      this.element.style.opacity = '1';
+    img.style.opacity = '0';
+    img.onload = () => {
+      img.style.transition = 'opacity 0.3s ease-in';
+      img.style.opacity = '1';
     };
   }
 }

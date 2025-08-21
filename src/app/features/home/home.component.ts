@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { RouterModule } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
@@ -341,20 +341,17 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     `
   ]
 })
-export class HomeComponent implements OnInit {
-  private translateService = inject(TranslateService);
-  public themeService = inject(ThemeService);
+export class HomeComponent {
+  public readonly themeService = inject(ThemeService);
 
-  ngOnInit(): void {
-    // Load translations for homepage
-  }
+  private readonly _translateService = inject(TranslateService);
 
-  changeLanguage(lang: string): void {
-    this.translateService.use(lang);
+  public changeLanguage(lang: string): void {
+    this._translateService.use(lang);
     localStorage.setItem('lang', lang);
   }
 
-  toggleTheme(): void {
+  public toggleTheme(): void {
     this.themeService.toggleTheme();
   }
 }

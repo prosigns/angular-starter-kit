@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true
 })
 export class TruncatePipe implements PipeTransform {
-  transform(value: string, limit = 100, completeWords = false, ellipsis = '...'): string {
+  public transform(value: string, limit = 100, completeWords = false, ellipsis = '...'): string {
     if (!value) {
       return '';
     }

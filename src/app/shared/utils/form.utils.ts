@@ -63,9 +63,9 @@ export function getControlByPath(form: FormGroup, path: string): AbstractControl
  */
 export function getAllErrors(
   control: AbstractControl | null,
-  result: { [key: string]: any } = {},
+  result: { [key: string]: ValidationErrors } = {},
   path: string = ''
-): { [key: string]: any } {
+): { [key: string]: ValidationErrors } {
   if (!control) {
     return result;
   }
