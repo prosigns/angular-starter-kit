@@ -25,8 +25,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         errorMessage = 'The requested resource was not found.';
       } else if (error.status === 403) {
         errorMessage = 'You do not have permission to access this resource.';
+      } else if (error.status === 429) {
+        errorMessage = 'Too many requests. Please wait a moment and try again.';
       } else if (error.status === 500) {
         errorMessage = 'Server error. Our team has been notified.';
+      } else if (error.status === 503) {
+        errorMessage = 'Service temporarily unavailable. Please try again later.';
       }
 
       // Optionally, extract custom error message from API if available

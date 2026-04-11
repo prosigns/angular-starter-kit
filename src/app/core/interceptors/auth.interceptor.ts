@@ -1,8 +1,11 @@
 import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../services/token.service';
+
+let isRefreshing = false;
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
@@ -48,15 +51,27 @@ function handleUnauthorizedError(
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
+  if (isRefreshing) {
+    // Queue this request until the token refresh completes
+    return refreshTokenSubject.pipe(
+      filter((token: string | null): token is string => token !== null),
+      take(1),
+      switchMap((token: string) => next(addTokenToRequest(req, token)))
+    );
+  }
+
+  isRefreshing = true;
+  refreshTokenSubject.next(null);
+
   return authService.refreshToken().pipe(
     switchMap(tokens => {
-      // Update tokens and retry request with new token
+      isRefreshing = false;
       tokenService.setTokens(tokens);
-      const newReq = addTokenToRequest(req, tokens.accessToken);
-      return next(newReq);
+      refreshTokenSubject.next(tokens.accessToken);
+      return next(addTokenToRequest(req, tokens.accessToken));
     }),
     catchError(refreshError => {
-      // If refresh fails, log out the user
+      isRefreshing = false;
       authService.logout();
       return throwError(() => refreshError);
     })

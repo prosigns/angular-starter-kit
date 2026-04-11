@@ -1,4 +1,5 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, of } from 'rxjs';
@@ -32,8 +33,8 @@ export class LoggingService {
   private _lastErrorId: string | null = null;
 
   private readonly _http = inject(HttpClient);
-
-  constructor() {}
+  private readonly _platformId = inject(PLATFORM_ID);
+  private readonly _isBrowser = isPlatformBrowser(this._platformId);
 
   public debug(message: string, data?: unknown): void {
     this._log(LogLevelEnum.debug, message, data);
@@ -64,8 +65,8 @@ export class LoggingService {
       level: LogLevelEnum.error,
       message,
       data: error,
-      url: window.location.href,
-      userAgent: navigator.userAgent,
+      url: this._isBrowser ? window.location.href : '',
+      userAgent: this._isBrowser ? navigator.userAgent : '',
       errorId
     };
 
@@ -93,8 +94,8 @@ export class LoggingService {
       level,
       message,
       data,
-      url: window.location.href,
-      userAgent: navigator.userAgent
+      url: this._isBrowser ? window.location.href : '',
+      userAgent: this._isBrowser ? navigator.userAgent : ''
     };
 
     // Only send INFO and higher to server in production
@@ -152,6 +153,6 @@ export class LoggingService {
   }
 
   private _generateErrorId(): string {
-    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `err_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }

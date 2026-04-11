@@ -1,4 +1,5 @@
-import { Injectable, RendererFactory2, inject, signal, DOCUMENT } from '@angular/core';
+import { Injectable, RendererFactory2, inject, signal, DOCUMENT, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export type Theme = 'light' | 'dark' | 'system';
 
@@ -11,11 +12,15 @@ export class ThemeService {
 
   private _document = inject(DOCUMENT);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);
-  private _window = window;
+  private _platformId = inject(PLATFORM_ID);
+  private _window: Window | null = isPlatformBrowser(this._platformId) ? window : null;
 
   private readonly _themeKey = 'app-theme';
 
   public initializeTheme(): void {
+    if (!isPlatformBrowser(this._platformId)) {
+      return;
+    }
     // Get saved theme or default to system
     const savedTheme = (localStorage.getItem(this._themeKey) as Theme) || 'system';
     this.setTheme(savedTheme);
@@ -26,7 +31,9 @@ export class ThemeService {
 
   public setTheme(theme: Theme): void {
     this.currentTheme.set(theme);
-    localStorage.setItem(this._themeKey, theme);
+    if (isPlatformBrowser(this._platformId)) {
+      localStorage.setItem(this._themeKey, theme);
+    }
 
     if (theme === 'system') {
       this._applySystemTheme();
