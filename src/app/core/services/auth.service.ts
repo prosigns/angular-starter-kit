@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, firstValueFrom, map, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   IAuthTokens,
@@ -47,8 +47,7 @@ export class AuthService {
     // Check for a valid token
     if (this._tokenService.isTokenValid()) {
       // Attempt to load user profile with the stored token
-      return this.getCurrentUser()
-        .toPromise()
+      return firstValueFrom(this.getCurrentUser())
         .then(() => true)
         .catch(() => {
           // If loading user fails, clear authentication

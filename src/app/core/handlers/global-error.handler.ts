@@ -28,11 +28,11 @@ export class GlobalErrorHandler implements ErrorHandler {
         this._toastService.showError('An unexpected error occurred. Our team has been notified.');
       }
 
-      // For critical errors, navigate to error page
+      // For critical errors, navigate to not-found page with error context
       if (this._isCriticalError(error)) {
-        this._router.navigate(['/error'], {
+        this._router.navigate(['/'], {
           queryParams: {
-            id: this._loggingService.getLastErrorId()
+            error: this._loggingService.getLastErrorId()
           }
         });
       }
@@ -47,9 +47,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const criticalErrorPatterns = [
       'ChunkLoadError', // Failed to load a critical JS chunk
       'ReferenceError', // Undefined variables, missing references
-      'TypeError', // Type errors, typically null or undefined issues
-      'ResizeObserver loop', // Infinite loop in ResizeObserver
-      'Maximum update depth' // React-like recursive rendering error
+      'TypeError' // Type errors, typically null or undefined issues
     ];
 
     if (!error) return false;

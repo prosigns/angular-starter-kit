@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular application
-FROM node:20-alpine as build
+FROM node:22-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy the rest of the application
 COPY . .
