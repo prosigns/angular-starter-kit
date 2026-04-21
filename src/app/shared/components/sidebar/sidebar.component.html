@@ -1,0 +1,325 @@
+<aside
+  class="fixed left-0 top-0 h-full bg-[#041643] shadow-xl border-r border-[#0a245e] z-50 transition-all duration-300 ease-in-out"
+  [style.width]="isCollapsed ? 'var(--sidebar-width-collapsed)' : 'var(--sidebar-width)'"
+>
+  <div class="flex flex-col h-full">
+    <app-sidebar-flyout
+      [isVisible]="flyoutVisible"
+      [parentMenuItem]="flyoutParentItem"
+      [subMenuItems]="flyoutSubMenuItems"
+      [position]="flyoutPosition"
+      [flyoutId]="flyoutId"
+      (itemSelected)="onFlyoutItemSelected($event)"
+      (flyoutClosed)="closeFlyout()"
+    ></app-sidebar-flyout>
+
+    <!-- Brand Header -->
+    <div
+      [class]="'flex items-center border-b border-[#0a245e] ' +
+               (isCollapsed ? 'justify-center px-0 py-4' : 'gap-2.5 px-4 py-4')"
+    >
+      <svg class="w-8 h-8 flex-shrink-0" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect width="40" height="40" rx="10" fill="rgba(255,255,255,0.12)" />
+        <path
+          d="M20 10C14.477 10 10 14.477 10 20s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm-1.875 14.375l-3.75-3.75 1.325-1.325L17.95 21.55l6.175-6.175L25.45 16.7l-7.325 7.675z"
+          fill="white"
+        />
+      </svg>
+      @if (!isCollapsed) {
+        <span class="text-white text-lg font-bold tracking-tight truncate">
+          Care<span class="font-normal opacity-90">Track</span>
+        </span>
+      }
+    </div>
+
+    <!-- Error state -->
+    @if (loadState === 'error' && !hasAnyMenu) {
+      <div
+        class="mx-3 my-3 p-3 rounded-md border border-red-500/40 bg-red-500/10 text-xs text-red-100"
+        role="alert"
+      >
+        @if (!isCollapsed) {
+          <p class="mb-2">{{ 'sidebar.loadError' | translate }}</p>
+        }
+        <button
+          (click)="retryLoad()"
+          class="text-xs font-semibold text-white underline underline-offset-2 hover:no-underline"
+        >
+          {{ 'sidebar.retry' | translate }}
+        </button>
+      </div>
+    }
+
+    <!-- Navigation Menu -->
+    <nav
+      class="flex-1 py-4 space-y-4 overflow-y-auto dropdown-scrollbar"
+      [class.px-0]="isCollapsed"
+      [class.px-3]="!isCollapsed"
+    >
+      @for (section of sections; track section.id; let first = $first) {
+        @if (section.items.length > 0) {
+          <div class="space-y-2">
+            @if (!first && !isCollapsed) {
+              <div class="border-t border-[#0a245e] my-3" aria-hidden="true"></div>
+            }
+            @if (!isCollapsed) {
+              <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                {{ section.labelKey | translate }}
+              </h3>
+            }
+            <div class="space-y-1">
+              @for (item of section.items; track trackByMenuItem($index, item)) {
+                <ng-container
+                  *ngTemplateOutlet="menuItem; context: { $implicit: item }"
+                ></ng-container>
+              }
+            </div>
+          </div>
+        }
+      }
+    </nav>
+
+    <!-- Bottom Actions -->
+    @if (bottomActions.length > 0) {
+      <div class="border-t border-[#0a245e] p-3 space-y-1">
+        @for (action of bottomActions; track trackByMenuItem($index, action)) {
+          <button
+            type="button"
+            (click)="handleMenuItemClick(action, $event)"
+            (keydown.enter)="handleMenuItemClick(action, $event)"
+            (keydown.space)="handleMenuItemClick(action, $event)"
+            [attr.aria-label]="action.label"
+            [class]="'group flex items-center text-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFA931] focus-visible:ring-offset-2 focus-visible:ring-offset-[#041643] transition-all duration-200 w-full ' +
+                     (isCollapsed ? 'px-2 py-3 justify-center h-12' : 'px-3 py-2.5 hover:bg-[#BFDBFE] hover:!text-[#041643]')"
+            [title]="isCollapsed ? (action.label || '') : ''"
+          >
+            <div
+              [class]="
+                'relative z-10 flex-shrink-0 ' +
+                (isCollapsed ? 'flex items-center justify-center' : '')
+              "
+            >
+              <svg
+                [class]="
+                  'transition-colors ' + (isCollapsed ? 'w-5 h-5' : 'w-5 h-5 mr-3')
+                "
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  [attr.d]="action.icon"
+                ></path>
+              </svg>
+            </div>
+            @if (!isCollapsed) {
+              <span class="flex-1 text-left text-sm font-medium transition-all duration-200">
+                {{ action.label }}
+              </span>
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+</aside>
+
+<!-- Mobile backdrop — visible only below lg breakpoint when sidebar is expanded -->
+@if (!isCollapsed) {
+  <button
+    type="button"
+    class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+    (click)="toggleSidebar()"
+    [attr.aria-label]="'sidebar.closeSidebar' | translate"
+  ></button>
+}
+
+<!-- Logout Confirmation -->
+@if (showLogoutConfirm) {
+  <div
+    class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50"
+    (click)="onLogoutCancel()"
+  >
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="logout-title"
+      class="bg-[#2f3846] text-white rounded-lg shadow-2xl w-full max-w-sm p-6 border border-gray-700"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="logout-title" class="text-lg font-semibold text-gray-100">
+        {{ 'sidebar.logoutTitle' | translate }}
+      </h2>
+      <p class="mt-2 text-sm text-gray-300">{{ 'sidebar.logoutMessage' | translate }}</p>
+      <div class="mt-4 flex gap-3 justify-end">
+        <button
+          (click)="onLogoutCancel()"
+          class="px-3 py-2 rounded-md bg-gray-600 hover:bg-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-gray-400"
+        >
+          {{ 'common.cancel' | translate }}
+        </button>
+        <button
+          (click)="onLogoutConfirm()"
+          class="px-3 py-2 rounded-md bg-red-600 hover:bg-red-500 text-white focus:outline-none focus:ring-2 focus:ring-red-400"
+        >
+          {{ 'sidebar.logoutConfirm' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Shared menu item template (parent + child + leaf) -->
+<ng-template #menuItem let-item>
+  @if (hasChildren(item)) {
+    <div class="space-y-1">
+      <button
+        type="button"
+        (click)="handleMenuItemClick(item, $event)"
+        (keydown.enter)="handleMenuItemClick(item, $event)"
+        (keydown.space)="handleMenuItemClick(item, $event)"
+        (focus)="onCollapsedParentFocus(item, $event)"
+        [attr.aria-label]="('sidebar.toggle' | translate) + ' ' + item.label"
+        [attr.aria-expanded]="!isCollapsed ? !!item.isExpanded : null"
+        [attr.aria-haspopup]="isCollapsed ? 'menu' : null"
+        [attr.aria-controls]="isCollapsed ? 'flyout-' + item.id : null"
+        [class]="'w-full flex items-center text-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFA931] focus-visible:ring-offset-2 focus-visible:ring-offset-[#041643] transition-all duration-200 group ' +
+                 (isCollapsed ? 'h-12 justify-center px-0' : 'px-3 py-2.5 hover:bg-[#BFDBFE] hover:!text-[#041643]') +
+                 (!isCollapsed && item.isExpanded ? ' !bg-[#BFDBFE] !text-[#041643]' : '')"
+        [title]="isCollapsed ? (item.label || '') : ''"
+      >
+        <span
+          [class]="
+            'relative z-10 flex-shrink-0 ' +
+            (isCollapsed ? 'flex items-center justify-center' : '')
+          "
+          data-flyout-trigger="true"
+          (click)="onCollapsedIconTrigger(item, $event)"
+          (keydown.enter)="onCollapsedIconTrigger(item, $event)"
+          (keydown.space)="onCollapsedIconTrigger(item, $event)"
+        >
+          <svg
+            [class]="
+              'transition-colors ' + (isCollapsed ? 'w-5 h-5' : 'w-5 h-5 mr-3')
+            "
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              [attr.d]="item.icon"
+            ></path>
+          </svg>
+        </span>
+
+        @if (!isCollapsed) {
+          <span class="flex-1 text-left text-sm font-medium transition-all duration-200">
+            {{ item.label }}
+          </span>
+
+          <svg
+            [class]="
+              'w-4 h-4 transition-transform duration-200 ' +
+              (item.isExpanded ? 'rotate-180' : '')
+            "
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            ></path>
+          </svg>
+        }
+      </button>
+
+      @if (!isCollapsed && item.isExpanded) {
+        <div class="ml-4 space-y-1 mt-1">
+          @for (child of item.children; track trackByMenuItem($index, child)) {
+            <a
+              [routerLink]="child.route"
+              [attr.aria-current]="isChildItemActive(child) ? 'page' : null"
+              [class]="'group flex items-center px-3 py-2 text-sm text-gray-300 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFA931] focus-visible:ring-offset-2 focus-visible:ring-offset-[#041643] hover:bg-[#BFDBFE] hover:!text-[#041643] transition-all duration-200 ' +
+                       (isChildItemActive(child) ? ' !bg-[#BFDBFE] !text-[#041643]' : '')"
+            >
+              <svg
+                class="w-4 h-4 mr-3 transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  [attr.d]="child.icon"
+                ></path>
+              </svg>
+              <span class="flex-1 transition-all duration-200">{{ child.label }}</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <a
+      [routerLink]="item.route"
+      (click)="handleMenuItemClick(item, $event)"
+      (keydown.enter)="handleMenuItemClick(item, $event)"
+      (keydown.space)="handleMenuItemClick(item, $event)"
+      [attr.aria-label]="('sidebar.navigateTo' | translate) + ' ' + item.label"
+      [attr.aria-current]="isMenuItemActive(item) ? 'page' : null"
+      [class]="'group flex items-center text-gray-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFA931] focus-visible:ring-offset-2 focus-visible:ring-offset-[#041643] transition-all duration-200 ' +
+               (isCollapsed ? 'h-12 justify-center px-0' : 'px-3 py-2.5 hover:bg-[#BFDBFE] hover:!text-[#041643]') +
+               (isMenuItemActive(item) ? (isCollapsed ? ' !bg-transparent !text-white' : ' !bg-[#BFDBFE] !text-[#041643]') : '')"
+      [title]="isCollapsed ? (item.label || '') : ''"
+    >
+      <div
+        [class]="
+          'relative z-10 flex-shrink-0 ' +
+          (isCollapsed ? 'flex items-center justify-center' : '')
+        "
+      >
+        <svg
+          [class]="
+            'transition-colors ' + (isCollapsed ? 'w-5 h-5' : 'w-5 h-5 mr-3')
+          "
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            [attr.d]="item.icon"
+          ></path>
+        </svg>
+      </div>
+      @if (!isCollapsed) {
+        <span class="flex-1 text-left text-sm font-medium transition-all duration-200">
+          {{ item.label }}
+        </span>
+        @if (item.badge) {
+          <span class="ml-2 px-2 py-1 text-xs font-medium bg-red-600 text-white rounded-full">
+            {{ item.badge }}
+          </span>
+        }
+      }
+    </a>
+  }
+</ng-template>

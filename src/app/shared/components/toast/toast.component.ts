@@ -1,111 +1,115 @@
-import { Component, computed, inject } from '@angular/core';
-
-import { ToastService, ToastTypeEnum } from '../../../core/services/toast.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { IToast, ToastService, ToastTypeEnum } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-toast',
-  imports: [],
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    @if (visibleToasts().length) {
-      <div class="toast-container">
-        @for (toast of visibleToasts(); track toast.id) {
+    @if (toasts().length) {
+      <div
+        class="ct-toast-container"
+        role="region"
+        aria-label="Notifications"
+      >
+        @for (toast of toasts(); track toast.id) {
           <div
-            class="toast-item toast-{{ toast.type }}"
-            [@toastAnimation]="'visible'"
-            (click)="removeToast(toast.id)"
+            class="ct-toast ct-toast--{{ toast.type }}"
+            [attr.role]="ariaRole(toast)"
+            [attr.aria-live]="ariaLive(toast)"
+            aria-atomic="true"
+            (mouseenter)="onHoverStart(toast.id)"
+            (mouseleave)="onHoverEnd(toast.id)"
+            (focusin)="onHoverStart(toast.id)"
+            (focusout)="onHoverEnd(toast.id)"
           >
-            <div class="toast-icon">
+            <span class="ct-toast__accent" aria-hidden="true"></span>
+
+            <span class="ct-toast__icon" aria-hidden="true">
               @switch (toast.type) {
-                @case (toastTypes.success) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                }
-                @case (toastTypes.error) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                }
-                @case (toastTypes.warning) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
+                @case (TYPES.SUCCESS) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path
-                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3
-                         L13.71 3.86a2 2 0 0 0-3.42 0z"
-                    ></path>
-                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                 }
-                @case (toastTypes.info) {
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="16" x2="12" y2="12"></line>
-                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                @case (TYPES.ERROR) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="9" stroke-width="2" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-width="2"
+                      d="M12 8v4M12 16h.01"
+                    />
+                  </svg>
+                }
+                @case (TYPES.WARNING) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                    />
+                  </svg>
+                }
+                @case (TYPES.INFO) {
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="9" stroke-width="2" />
+                    <path
+                      stroke-linecap="round"
+                      stroke-width="2"
+                      d="M12 8h.01M11 12h1v4h1"
+                    />
                   </svg>
                 }
               }
+            </span>
+
+            <div class="ct-toast__body">
+              @if (toast.title) {
+                <p class="ct-toast__title">{{ toast.title }}</p>
+              }
+              <p class="ct-toast__message">{{ toast.message }}</p>
+              @if (toast.action) {
+                <button
+                  type="button"
+                  class="ct-toast__action"
+                  (click)="runAction(toast)"
+                >
+                  {{ toast.action.label }}
+                </button>
+              }
             </div>
-            <div class="toast-content">
-              <div class="toast-message">{{ toast.message }}</div>
-            </div>
-            <button class="toast-close" (click)="removeToast(toast.id); $event.stopPropagation()">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+
+            @if (toast.dismissible) {
+              <button
+                type="button"
+                class="ct-toast__close"
+                aria-label="Dismiss notification"
+                (click)="dismiss(toast.id)"
               >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            }
+
+            <span
+              class="ct-toast__progress"
+              [style.animation-duration.ms]="toast.duration"
+              [attr.data-paused]="pausedIds.has(toast.id) ? 'true' : null"
+              aria-hidden="true"
+            ></span>
           </div>
         }
       </div>
@@ -113,152 +117,226 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   `,
   styles: [
     `
-      .toast-container {
+      :host {
+        display: contents;
+      }
+
+      .ct-toast-container {
         position: fixed;
-        top: 1rem;
+        bottom: 1.25rem;
         right: 1rem;
-        z-index: 9999;
+        z-index: 100;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
+        align-items: flex-end;
         gap: 0.5rem;
-        max-width: 350px;
-        width: 100%;
+        max-width: 380px;
+        width: calc(100% - 2rem);
         pointer-events: none;
       }
 
-      .toast-item {
+      .ct-toast {
+        position: relative;
         display: flex;
         align-items: flex-start;
-        padding: 1rem;
-        border-radius: 0.375rem;
+        gap: 0.75rem;
+        padding: 0.875rem 0.875rem 0.875rem 1rem;
+        background: #ffffff;
+        border: 1px solid var(--ct-border, #e5e7eb);
+        border-radius: 8px;
         box-shadow:
-          0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          0 10px 15px -3px rgba(15, 23, 42, 0.08),
+          0 4px 6px -4px rgba(15, 23, 42, 0.06);
         pointer-events: auto;
-        cursor: pointer;
         overflow: hidden;
+        animation: ct-toast-in 220ms cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .toast-success {
-        background-color: #ecfdf5;
-        border: 1px solid #10b981;
-        color: #065f46;
+      @keyframes ct-toast-in {
+        from {
+          opacity: 0;
+          transform: translateY(16px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
       }
 
-      .toast-error {
-        background-color: #fef2f2;
-        border: 1px solid #ef4444;
-        color: #991b1b;
+      .ct-toast__accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
       }
 
-      .toast-info {
-        background-color: #eff6ff;
-        border: 1px solid #3b82f6;
-        color: #1e40af;
-      }
-
-      .toast-warning {
-        background-color: #fffbeb;
-        border: 1px solid #f59e0b;
-        color: #92400e;
-      }
-
-      .toast-icon {
+      .ct-toast__icon {
         flex-shrink: 0;
-        margin-right: 0.75rem;
-        display: flex;
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
       }
+      .ct-toast__icon svg {
+        width: 100%;
+        height: 100%;
+      }
 
-      .toast-content {
+      .ct-toast__body {
         flex: 1;
+        min-width: 0;
       }
 
-      .toast-message {
-        font-size: 0.875rem;
-        line-height: 1.25rem;
+      .ct-toast__title {
+        margin: 0;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        line-height: 1.25;
+        color: var(--text-primary, #0f172a);
       }
 
-      .toast-close {
-        background: transparent;
-        border: none;
-        cursor: pointer;
+      .ct-toast__message {
+        margin: 0.125rem 0 0;
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        color: var(--text-secondary, #475569);
+        word-break: break-word;
+      }
+
+      .ct-toast__action {
+        margin-top: 0.5rem;
         padding: 0;
-        display: flex;
+        background: transparent;
+        border: 0;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        color: var(--primary, #2563eb);
+      }
+      .ct-toast__action:hover {
+        text-decoration: underline;
+      }
+      .ct-toast__action:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      .ct-toast__close {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        color: var(--text-muted, #94a3b8);
+        cursor: pointer;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: currentColor;
-        opacity: 0.7;
-        margin-left: 0.5rem;
+        border-radius: 4px;
+        transition: color 150ms ease, background-color 150ms ease;
+      }
+      .ct-toast__close:hover {
+        color: var(--text-primary, #0f172a);
+        background: rgba(15, 23, 42, 0.06);
+      }
+      .ct-toast__close:focus-visible {
+        outline: 2px solid var(--primary, #2563eb);
+        outline-offset: 1px;
+      }
+      .ct-toast__close svg {
+        width: 14px;
+        height: 14px;
       }
 
-      .toast-close:hover {
-        opacity: 1;
+      .ct-toast__progress {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+        transform-origin: left center;
+        animation-name: ct-toast-progress;
+        animation-timing-function: linear;
+        animation-fill-mode: forwards;
+      }
+      .ct-toast__progress[data-paused='true'] {
+        animation-play-state: paused;
       }
 
-      :host-context(.dark) .toast-success {
-        background-color: rgba(16, 185, 129, 0.1);
-        border-color: #10b981;
-        color: #d1fae5;
+      @keyframes ct-toast-progress {
+        from {
+          transform: scaleX(1);
+        }
+        to {
+          transform: scaleX(0);
+        }
       }
 
-      :host-context(.dark) .toast-error {
-        background-color: rgba(239, 68, 68, 0.1);
-        border-color: #ef4444;
-        color: #fee2e2;
-      }
+      /* Variant accents + icon colors + progress colors (corporate tokens) */
+      .ct-toast--success .ct-toast__accent { background: #059669; }
+      .ct-toast--success .ct-toast__icon   { color:      #059669; }
+      .ct-toast--success .ct-toast__progress { background: #059669; }
 
-      :host-context(.dark) .toast-info {
-        background-color: rgba(59, 130, 246, 0.1);
-        border-color: #3b82f6;
-        color: #dbeafe;
-      }
+      .ct-toast--error   .ct-toast__accent { background: #dc2626; }
+      .ct-toast--error   .ct-toast__icon   { color:      #dc2626; }
+      .ct-toast--error   .ct-toast__progress { background: #dc2626; }
 
-      :host-context(.dark) .toast-warning {
-        background-color: rgba(245, 158, 11, 0.1);
-        border-color: #f59e0b;
-        color: #fef3c7;
+      .ct-toast--warning .ct-toast__accent { background: #d97706; }
+      .ct-toast--warning .ct-toast__icon   { color:      #d97706; }
+      .ct-toast--warning .ct-toast__progress { background: #d97706; }
+
+      .ct-toast--info    .ct-toast__accent { background: #2563eb; }
+      .ct-toast--info    .ct-toast__icon   { color:      #2563eb; }
+      .ct-toast--info    .ct-toast__progress { background: #2563eb; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ct-toast,
+        .ct-toast__progress {
+          animation: none;
+        }
       }
     `
-  ],
-  animations: [
-    trigger('toastAnimation', [
-      state(
-        'visible',
-        style({
-          transform: 'translateX(0)',
-          opacity: 1
-        })
-      ),
-      transition(':enter', [
-        style({
-          transform: 'translateX(100%)',
-          opacity: 0
-        }),
-        animate('300ms ease-out')
-      ]),
-      transition(':leave', [
-        animate(
-          '200ms ease-in',
-          style({
-            transform: 'translateX(100%)',
-            opacity: 0
-          })
-        )
-      ])
-    ])
   ]
 })
 export class ToastComponent {
-  // Make toast types available in the template
-  public readonly toastTypes = ToastTypeEnum;
-  // Use a computed signal to access the toasts
-  public readonly visibleToasts = computed(() => this._toastService.toasts());
+  public readonly TYPES = ToastTypeEnum;
+  public readonly pausedIds = new Set<string>();
 
-  private readonly _toastService = inject(ToastService);
+  private readonly toastService = inject(ToastService);
 
-  public removeToast(id: string): void {
-    this._toastService.removeToast(id);
+  public readonly toasts = computed<IToast[]>(() => this.toastService.toasts());
+
+  public dismiss(id: string): void {
+    this.toastService.removeToast(id);
+    this.pausedIds.delete(id);
+  }
+
+  public runAction(toast: IToast): void {
+    toast.action?.handler();
+    this.dismiss(toast.id);
+  }
+
+  public onHoverStart(id: string): void {
+    this.pausedIds.add(id);
+    this.toastService.pause(id);
+  }
+
+  public onHoverEnd(id: string): void {
+    this.pausedIds.delete(id);
+    this.toastService.resume(id);
+  }
+
+  public ariaRole(toast: IToast): 'alert' | 'status' {
+    return toast.type === ToastTypeEnum.ERROR || toast.type === ToastTypeEnum.WARNING
+      ? 'alert'
+      : 'status';
+  }
+
+  public ariaLive(toast: IToast): 'assertive' | 'polite' {
+    return toast.type === ToastTypeEnum.ERROR ? 'assertive' : 'polite';
   }
 }

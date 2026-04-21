@@ -1,0 +1,751 @@
+.admin-datatable-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f3f4f6 !important; /* gray-100 - light border */
+  overflow: hidden;
+
+  // Table wrapper
+  .table-wrapper {
+    position: relative;
+    overflow: auto;
+    max-height: 60vh;
+    min-height: 250px;
+
+    .admin-data-table {
+      width: 100%;
+
+      &.admin-data-table--variable-row-height {
+        table-layout: fixed;
+
+        .mat-mdc-row {
+          height: auto;
+        }
+
+        .mat-mdc-cell.dt-cell-wrap {
+          max-width: 0;
+          min-width: 0;
+        }
+      }
+
+      .mat-mdc-header-row {
+        background-color: #f5f5f5;
+        height: 40px;
+        min-height: 40px;
+      }
+
+      .mat-mdc-row {
+        font-size: 13px;
+        height: 44px;
+        min-height: 44px;
+        border-bottom: 1px solid #f0f0f0;
+
+        // Alternating row colors
+        &:nth-child(even) {
+          background-color: #fafbfc;
+        }
+
+        &:nth-child(odd) {
+          background-color: #ffffff;
+        }
+
+        &:hover {
+          background-color: #e3f2fd !important;
+          cursor: pointer;
+        }
+
+        &.selected-row {
+          background-color: #e3f2fd !important;
+        }
+      }
+
+      .mat-mdc-cell, .mat-mdc-header-cell {
+        padding: 8px 12px;
+        border-right: 1px solid #f5f5f5;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+      .mat-mdc-cell.dt-cell-wrap,
+      .mat-mdc-header-cell.dt-cell-wrap {
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: normal;
+        vertical-align: top;
+        line-height: 1.55;
+      }
+
+      .mat-mdc-cell.dt-cell-wrap .dt-cell-wrap-inner {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: normal;
+      }
+
+      .mat-mdc-header-cell.dt-cell-wrap {
+        vertical-align: middle;
+      }
+
+      .mat-mdc-header-cell {
+        border-bottom: 1px solid #e8e8e8;
+      }
+
+      .checkbox-cell {
+        width: 50px;
+        padding: 0 6px;
+        text-align: center;
+
+        .mat-mdc-checkbox {
+          // Checked and indeterminate states
+          .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+          .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+            background-color: #208fce !important;
+            border-color: #208fce !important;
+          }
+
+          // Checkmark color
+          .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+            color: white !important;
+          }
+
+          // Unchecked state
+          .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate="true"]) ~ .mdc-checkbox__background {
+            border-color: rgba(0, 0, 0, 0.54) !important;
+          }
+
+          // Focus and hover states
+          .mdc-checkbox__native-control:enabled:focus ~ .mdc-checkbox__background,
+          .mdc-checkbox__native-control:enabled:hover ~ .mdc-checkbox__background {
+            border-color: #208fce !important;
+          }
+
+          // Additional selectors for newer Material versions
+          &.mat-mdc-checkbox-checked .mdc-checkbox__background {
+            background-color: #208fce !important;
+            border-color: #208fce !important;
+          }
+
+          &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+            background-color: #208fce !important;
+            border-color: #208fce !important;
+          }
+        }
+      }
+
+      .actions-cell {
+        width: 50px;
+        text-align: center;
+        white-space: nowrap;
+        padding: 6px 8px;
+
+        .actions-header {
+          font-weight: 600;
+          font-size: 11px;
+          color: #495057;
+          text-transform: uppercase;
+          letter-spacing: 0.6px;
+          margin: 0;
+        }
+
+        .action-menu-wrapper {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .status-cell {
+        display: flex;
+        align-items: center;
+
+        .status-indicator {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          margin-right: 6px;
+
+          // Status colors (boolean true/false for isActive-style columns)
+          &.true {
+            background-color: #4caf50;
+          }
+          &.false {
+            background-color: #f44336;
+          }
+
+          &.active,
+          &.completed,
+          &.loggedin {
+            background-color: #4caf50;
+          }
+
+          &.approved {
+            background-color: #9c27b0;
+          }
+
+          &.pending,
+          &.waiting {
+            background-color: #ff9800;
+          }
+
+          /* Purchase Receipt Status Colors */
+          &.draft {
+            background-color: #9e9e9e; /* Gray */
+          }
+
+          &.submitted {
+            background-color: #2196f3; /* Blue */
+          }
+
+          &.partiallyreceived {
+            background-color: #ff9800; /* Orange */
+          }
+
+          &.fullyreceived {
+            background-color: #4caf50; /* Green */
+          }
+
+          &.cancelled {
+            background-color: #f44336; /* Red */
+          }
+
+          &.inactive,
+          &.rejected,
+          &.failed,
+          &.loggedout {
+            background-color: #f44336;
+          }
+
+          &.draft,
+          &.sessionout {
+            background-color: #9e9e9e;
+          }
+
+          /* Stock Status Colors */
+          &.instock {
+            background-color: #4caf50; /* Green */
+          }
+
+          &.lowstock {
+            background-color: #ff9800; /* Orange */
+          }
+
+          &.outofstock {
+            background-color: #f44336; /* Red */
+          }
+
+          /* Stock Status Colors - Hyphenated versions */
+          &.in-stock {
+            background-color: #4caf50; /* Green */
+          }
+
+          &.low-stock {
+            background-color: #ff9800; /* Orange */
+          }
+
+          &.out-of-stock {
+            background-color: #f44336; /* Red */
+          }
+        }
+      }
+
+      // Location cell styling
+      .location-cell {
+        .coordinate-link {
+          color: #1976d2;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          transition: color 0.2s ease;
+
+          &:hover {
+            color: #1565c0;
+            text-decoration: underline;
+          }
+
+          .location-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+          }
+        }
+
+        .location-text {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          color: #666;
+
+          .location-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+            color: #999;
+          }
+        }
+      }
+
+      // Boolean cell styling
+      .boolean-cell {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .boolean-true {
+          color: #4caf50;
+          font-size: 16px;
+        }
+
+        .boolean-false {
+          color: #f44336;
+          font-size: 16px;
+        }
+
+        .boolean-text {
+          font-size: 12px;
+          font-weight: 500;
+        }
+      }
+    }
+
+    // Empty state
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      text-align: center;
+      color: #666;
+
+      .mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+        color: #bdbdbd;
+      }
+
+      h3 {
+        margin: 0 0 6px;
+        font-weight: 500;
+        font-size: 16px;
+      }
+
+      p {
+        margin: 0 0 6px;
+        color: #888;
+        font-size: 13px;
+      }
+
+      .custom-button {
+        height: 32px;
+        font-size: 13px;
+
+        .mat-icon {
+          margin-bottom: 2px;
+          color: #bdbdbd;
+          font-size: 1.1rem;
+          height: 1.1rem;
+          width: 1.1rem;
+        }
+      }
+    }
+
+    // Loading state
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      text-align: center;
+
+      p {
+        margin: 12px 0 0;
+        color: #666;
+        font-size: 13px;
+      }
+    }
+
+    // Error state
+    .error-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      text-align: center;
+      color: #f44336;
+
+      .mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+      }
+
+      p {
+        margin: 0 0 12px;
+        font-size: 13px;
+      }
+    }
+  }
+
+    // Pagination
+  .pagination-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #f0f0f0;
+
+    .left-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .total-count {
+      padding: 0 12px;
+      font-size: 13px;
+      color: rgba(0, 0, 0, 0.6);
+    }
+
+        .page-numbers {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+
+      button {
+        min-width: 28px;
+        height: 28px;
+        margin: 0 3px;
+        padding: 0 6px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background-color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          background-color: #f5f5f5;
+        }
+
+        &.active {
+          background-color: #3f51b5;
+          color: white;
+          border-color: #3f51b5;
+        }
+      }
+
+      .ellipsis {
+        margin: 0 3px;
+        font-size: 14px;
+        line-height: 28px;
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    .mat-mdc-paginator {
+      flex: 1;
+      border-top: none;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .admin-datatable-container {
+    .datatable-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+
+      .right-section {
+        .search-field {
+          width: 100%;
+        }
+      }
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+
+      .admin-data-table {
+        min-width: 650px;
+      }
+    }
+  }
+}
+
+// Corporate Action Menu Styling
+::ng-deep .corporate-action-menu {
+  min-width: 220px;
+  max-width: 260px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+
+  .corporate-menu-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .header-icon {
+      font-size: 14px;
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+    }
+
+    .menu-title {
+      font-weight: 600;
+      font-size: 11px;
+      color: #495057;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin: 0;
+    }
+  }
+
+  .action-section {
+    padding: 2px 0;
+
+    &.primary-section {
+      background-color: #ffffff;
+    }
+
+    &.custom-section {
+      background-color: #fafbfc;
+    }
+
+    &.danger-section {
+      background-color: #fff9f9;
+
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, #ffebee 20%, #ffebee 80%, transparent 100%);
+        margin: 2px 8px;
+      }
+    }
+
+    .corporate-menu-item {
+      height: 36px;
+      min-height: 36px;
+      padding: 0;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      background: transparent;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+
+        .action-icon {
+          transform: translateX(2px) scale(1.05);
+        }
+
+        .action-label {
+          color: #1976d2;
+        }
+      }
+
+      &:active {
+        background-color: rgba(0, 0, 0, 0.08);
+        transform: scale(0.98);
+      }
+
+      &[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        &:hover {
+          background-color: transparent;
+
+          .action-icon {
+            transform: none;
+          }
+
+          .action-label {
+            color: inherit;
+          }
+        }
+      }
+
+      .action-content {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        width: 100%;
+        gap: 12px;
+
+        .action-icon {
+          font-size: 14px;
+          width: 18px;
+          height: 18px;
+          min-width: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          flex-shrink: 0;
+
+          &.primary-icon {
+            color: #1976d2;
+          }
+
+          &.danger-icon {
+            color: #d32f2f;
+          }
+
+          &.inactive-icon {
+            color: #9e9e9e;
+          }
+        }
+
+        .action-text {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          flex: 1;
+          min-width: 0;
+
+          .action-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #212529;
+            line-height: 1.3;
+            transition: color 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+          }
+
+          .action-description {
+            font-size: 10px;
+            color: #6c757d;
+            line-height: 1.2;
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+          }
+        }
+      }
+
+      &.delete-action {
+        .action-content:hover {
+          .action-label {
+            color: #d32f2f;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Corporate Action Menu Trigger
+.action-menu-trigger {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.corporate-trigger {
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+
+    .menu-dots {
+      font-size: 16px;
+      color: #6c757d;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.08);
+      border-color: rgba(25, 118, 210, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      .menu-dots {
+        color: #1976d2;
+        transform: scale(1.1);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+::ng-deep .mat-mdc-menu-item .mat-icon.inactive-icon {
+  color: #9e9e9e; // grey
+}
+
+::ng-deep .action-tooltip {
+  font-size: 12px;
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+// Enhanced menu panel styling
+::ng-deep .mat-mdc-menu-panel {
+  &.corporate-action-menu {
+    .mat-mdc-menu-content {
+      background: white;
+    }
+  }
+}
+
+// Additional global checkbox styling for admin datatable
+::ng-deep .admin-datatable-container {
+  .mat-mdc-checkbox {
+    // Ensure checkbox fill color is consistently applied
+    &.mat-mdc-checkbox-checked .mdc-checkbox__background,
+    &.mat-mdc-checkbox-indeterminate .mdc-checkbox__background {
+      background-color: #208fce !important;
+      border-color: #208fce !important;
+    }
+
+    // Ripple effect color
+    .mdc-checkbox__ripple {
+      --mdc-ripple-color: #208fce;
+    }
+
+    // Focus ring color
+    .mdc-checkbox__focus-ring {
+      border-color: #208fce !important;
+    }
+  }
+}

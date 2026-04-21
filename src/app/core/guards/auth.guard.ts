@@ -7,10 +7,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.isAuthenticated$.pipe(
+  return authService.authState$.pipe(
     take(1),
-    map(isAuthenticated => {
-      if (isAuthenticated) {
+    map(authState => {
+      if (authState.isAuthenticated) {
         return true;
       } else {
         // Store the attempted URL for redirecting after login

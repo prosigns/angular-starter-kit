@@ -32,8 +32,9 @@ export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-export function initializeApp(authService: AuthService) {
-  return () => authService.initAuth();
+export function initializeApp() {
+  // AuthService constructor initializes auth state from stored tokens
+  return () => Promise.resolve();
 }
 
 export const appConfig: ApplicationConfig = {
@@ -50,7 +51,8 @@ export const appConfig: ApplicationConfig = {
     provideEnvironmentNgxMask(),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     provideAppInitializer(() => {
-      const initializerFn = initializeApp(inject(AuthService));
+      inject(AuthService); // Triggers constructor which initializes auth state
+      const initializerFn = initializeApp();
       return initializerFn();
     }),
     importProvidersFrom(

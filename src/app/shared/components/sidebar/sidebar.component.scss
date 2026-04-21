@@ -1,0 +1,176 @@
+// Unified Sidebar Styles
+:host {
+  display: block;
+}
+
+// Custom scrollbar for dropdown menus
+.dropdown-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #0a245e #041643;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #041643;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #0a245e;
+    border-radius: 3px;
+
+    &:hover {
+      background: #103477;
+    }
+  }
+}
+
+// Focus styles for accessibility
+button, a, [tabindex] {
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #FFA931;
+    outline-offset: 2px;
+  }
+}
+
+// Smooth transitions for all interactive elements
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Hover effects
+.hover\:bg-\[\#3a4553\]:hover {
+  background-color: #0a245e;
+}
+
+.hover\:text-white:hover {
+  color: white;
+}
+
+.hover\:border-\[\#4a5563\]:hover {
+  border-color: #103477;
+}
+
+// Active state styles
+.bg-\[\#4a5563\] {
+  background-color: #0a245e;
+}
+
+.border-\[\#5a6573\] {
+  border-color: #103477;
+}
+
+// Background colors
+.bg-\[\#2f3846\] {
+  background-color: #041643;
+}
+
+.bg-\[\#3a4553\]\/30 {
+  background-color: rgba(10, 36, 94, 0.35);
+}
+
+// Text colors
+.text-gray-300 {
+  color: #d1d5db;
+}
+
+.text-white {
+  color: white;
+}
+
+// Border colors
+.border-gray-600 {
+  border-color: #103477;
+}
+
+.border-gray-700 {
+  border-color: #0a245e;
+}
+
+.border-transparent {
+  border-color: transparent;
+}
+
+// Responsive utilities
+@media (max-width: 1023px) {
+  .lg\:translate-x-0 {
+    transform: translateX(0);
+  }
+
+  .lg\:ml-16 {
+    margin-left: 4rem;
+  }
+
+  .lg\:ml-64 {
+    margin-left: 16rem;
+  }
+
+  .lg\:w-16 {
+    width: 4rem;
+  }
+
+  .lg\:w-64 {
+    width: 16rem;
+  }
+}
+
+// Animation for expand/collapse
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+// Scale effect for toggle button
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+// Badge styles
+.bg-red-600 {
+  background-color: #dc2626;
+}
+
+.text-white {
+  color: white;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+// Shadow effects
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+// Z-index
+.z-30 {
+  z-index: 30;
+}
+
+.z-40 {
+  z-index: 40;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+// Backdrop
+.bg-black {
+  background-color: black;
+}
+
+.bg-opacity-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}

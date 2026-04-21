@@ -6,11 +6,11 @@ import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 export enum LogLevelEnum {
-  debug = 'DEBUG',
-  info = 'INFO',
-  warn = 'WARN',
-  error = 'ERROR',
-  fatal = 'FATAL'
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  WARN = 'WARN',
+  ERROR = 'ERROR',
+  FATAL = 'FATAL'
 }
 
 export interface ILogEntry {
@@ -37,23 +37,23 @@ export class LoggingService {
   private readonly _isBrowser = isPlatformBrowser(this._platformId);
 
   public debug(message: string, data?: unknown): void {
-    this._log(LogLevelEnum.debug, message, data);
+    this._log(LogLevelEnum.DEBUG, message, data);
   }
 
   public info(message: string, data?: unknown): void {
-    this._log(LogLevelEnum.info, message, data);
+    this._log(LogLevelEnum.INFO, message, data);
   }
 
   public warn(message: string, data?: unknown): void {
-    this._log(LogLevelEnum.warn, message, data);
+    this._log(LogLevelEnum.WARN, message, data);
   }
 
   public error(message: string, data?: unknown): void {
-    this._log(LogLevelEnum.error, message, data);
+    this._log(LogLevelEnum.ERROR, message, data);
   }
 
   public fatal(message: string, data?: unknown): void {
-    this._log(LogLevelEnum.fatal, message, data);
+    this._log(LogLevelEnum.FATAL, message, data);
   }
 
   public logError(message: string, error?: unknown): string {
@@ -62,7 +62,7 @@ export class LoggingService {
 
     const logEntry: ILogEntry = {
       timestamp: new Date().toISOString(),
-      level: LogLevelEnum.error,
+      level: LogLevelEnum.ERROR,
       message,
       data: error,
       url: this._isBrowser ? window.location.href : '',
@@ -101,10 +101,10 @@ export class LoggingService {
     // Only send INFO and higher to server in production
     if (
       environment.production &&
-      (level === LogLevelEnum.info ||
-        level === LogLevelEnum.warn ||
-        level === LogLevelEnum.error ||
-        level === LogLevelEnum.fatal)
+      (level === LogLevelEnum.INFO ||
+        level === LogLevelEnum.WARN ||
+        level === LogLevelEnum.ERROR ||
+        level === LogLevelEnum.FATAL)
     ) {
       this._sendToServer(logEntry).subscribe();
     }
@@ -132,20 +132,20 @@ export class LoggingService {
     const timestamp = new Date(logEntry.timestamp).toLocaleTimeString();
 
     switch (level) {
-      case LogLevelEnum.debug:
+      case LogLevelEnum.DEBUG:
         // eslint-disable-next-line no-console
         console.debug(`[${timestamp}] DEBUG: ${message}`, data);
         break;
-      case LogLevelEnum.info:
+      case LogLevelEnum.INFO:
         // eslint-disable-next-line no-console
         console.info(`[${timestamp}] INFO: ${message}`, data);
         break;
-      case LogLevelEnum.warn:
+      case LogLevelEnum.WARN:
         // eslint-disable-next-line no-console
         console.warn(`[${timestamp}] WARN: ${message}`, data);
         break;
-      case LogLevelEnum.error:
-      case LogLevelEnum.fatal:
+      case LogLevelEnum.ERROR:
+      case LogLevelEnum.FATAL:
         // eslint-disable-next-line no-console
         console.error(`[${timestamp}] ${level}: ${message}`, data);
         break;

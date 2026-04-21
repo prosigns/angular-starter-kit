@@ -1,0 +1,356 @@
+<div class="admin-datatable-container">
+  <!-- Main data table -->
+  <div class="table-wrapper">
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="onSortChange($event)"
+      class="admin-data-table"
+      [class.admin-data-table--variable-row-height]="config.variableRowHeight === true"
+    >
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select" *ngIf="showCheckbox">
+        <th mat-header-cell *matHeaderCellDef class="checkbox-cell">
+          <mat-checkbox
+            color="primary"
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            [disabled]="isAnyRowDisabled()"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row" class="checkbox-cell">
+          <mat-checkbox
+            color="primary"
+            [disabled]="config.disableCheckboxFn?.(row)"
+            (click)="$event.stopPropagation()"
+            (change)="onCheckboxChange($event, row)"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Dynamic Columns -->
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header="{{ column.sortable ? column.key : '' }}"
+          [class.dt-cell-wrap]="column.wrapText === true"
+        >
+          {{ column.title }}
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+          (click)="onRowClick(row)"
+          [class.dt-cell-wrap]="column.wrapText === true"
+        >
+          <ng-container *ngIf="column.customTemplate; else defaultCell">
+            <ng-container
+              [ngTemplateOutlet]="column.customTemplate"
+              [ngTemplateOutletContext]="{ $implicit: row, column: column }"
+            ></ng-container>
+          </ng-container>
+
+          <ng-template #defaultCell>
+            <!-- Different cell templates based on type -->
+            <ng-container [ngSwitch]="column.type">
+              <ng-container *ngSwitchCase="'image'">
+                <ng-container
+                  *ngIf="normalizeImageUrl(getValue(row, column)) as src; else emptyImage"
+                >
+                  <img
+                    [src]="src"
+                    [alt]="column.title"
+                    class="h-8 w-8 rounded-md border border-gray-200 bg-gray-50 object-contain"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                </ng-container>
+                <ng-template #emptyImage>
+                  <span
+                    class="inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 bg-gray-50 text-xs font-medium text-gray-400"
+                  >
+                    —
+                  </span>
+                </ng-template>
+              </ng-container>
+
+              <!-- Date type -->
+              <span *ngSwitchCase="'date'">
+                {{ getDateValue(row, column) | date: 'mediumDate' }}
+              </span>
+
+              <span *ngSwitchCase="'datetime'">
+                {{ getDateValue(row, column) | date: 'MMM d, y, h:mm a' }}
+              </span>
+
+              <!-- Status type -->
+              <span *ngSwitchCase="'status'" class="status-cell">
+                <span
+                  class="status-indicator"
+                  [ngClass]="getStatusClass(getValue(row, column))"
+                ></span>
+                {{ formatStatus(getValue(row, column)) }}
+              </span>
+
+              <!-- Boolean type: use raw value so "No" (formatted) is not treated as truthy -->
+              <span *ngSwitchCase="'boolean'" class="boolean-cell">
+                <mat-icon
+                  [ngClass]="
+                    isBooleanTrue(getRawValue(row, column)) ? 'boolean-true' : 'boolean-false'
+                  "
+                  [title]="isBooleanTrue(getRawValue(row, column)) ? 'Yes' : 'No'"
+                >
+                  {{ isBooleanTrue(getRawValue(row, column)) ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                <span class="boolean-text">
+                  {{ isBooleanTrue(getRawValue(row, column)) ? 'Yes' : 'No' }}
+                </span>
+              </span>
+
+              <!-- Location type for coordinates -->
+              <span *ngSwitchCase="'location'" class="location-cell">
+                <ng-container *ngIf="isCoordinates(getValue(row, column))">
+                  <a
+                    [href]="'https://www.google.com/maps?q=' + getValue(row, column)"
+                    target="_blank"
+                    class="coordinate-link"
+                    title="View {{ getValue(row, column) }} on Google Maps"
+                  >
+                    <mat-icon class="location-icon">location_on</mat-icon>
+                    Open in Map
+                  </a>
+                </ng-container>
+                <ng-container *ngIf="!isCoordinates(getValue(row, column))">
+                  <span class="location-text">
+                    <mat-icon class="location-icon">place</mat-icon>
+                    {{ getValue(row, column) }}
+                  </span>
+                </ng-container>
+              </span>
+
+              <!-- Role type -->
+              <span *ngSwitchCase="'role'" class="role-cell">
+                {{ getRoleDisplay(row) }}
+              </span>
+
+              <ng-container *ngSwitchCase="'link'">
+                <ng-container
+                  *ngIf="normalizeExternalUrl(getValue(row, column)) as href; else emptyLink"
+                >
+                  <a
+                    [href]="href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-[#041643] underline underline-offset-2 hover:text-[#07235c] focus:outline-none focus:ring-2 focus:ring-[#041643]/30 focus:ring-offset-2"
+                    (click)="$event.stopPropagation()"
+                    (keydown.enter)="$event.stopPropagation()"
+                    (keydown.space)="$event.stopPropagation()"
+                    [attr.aria-label]="(column.linkConfig?.linkText ?? 'View') + ' ' + column.title"
+                  >
+                    {{ column.linkConfig?.linkText ?? 'View' }}
+                  </a>
+                </ng-container>
+                <ng-template #emptyLink>
+                  <span class="text-gray-400">—</span>
+                </ng-template>
+              </ng-container>
+
+              <!-- Default text type -->
+              <span *ngSwitchDefault [class.dt-cell-wrap-inner]="column.wrapText === true">
+                {{ getValue(row, column) }}
+              </span>
+            </ng-container>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions" *ngIf="showActions">
+        <th mat-header-cell *matHeaderCellDef class="actions-cell">
+          <span class="actions-header">Actions</span>
+        </th>
+        <td mat-cell *matCellDef="let row" class="actions-cell">
+          <div class="action-menu-wrapper" *ngIf="hasRowActions(row)">
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="actionMenu"
+              class="action-menu-trigger corporate-trigger"
+              aria-label="Show actions menu"
+            >
+              <mat-icon class="menu-dots">more_vert</mat-icon>
+            </button>
+
+            <mat-menu
+              #actionMenu="matMenu"
+              class="corporate-action-menu"
+              xPosition="before"
+              yPosition="below"
+            >
+              <!-- Menu Header with enhanced styling -->
+              <div class="corporate-menu-header">
+                <mat-icon class="header-icon">settings</mat-icon>
+                <span class="menu-title">Quick Actions</span>
+              </div>
+
+              <!-- Primary Actions Group -->
+              <div class="action-section primary-section" *ngIf="config.editFunction !== undefined">
+                <button
+                  mat-menu-item
+                  class="corporate-menu-item edit-action"
+                  (click)="$event.stopPropagation(); editRow(row)"
+                  (keydown.enter)="$event.stopPropagation(); editRow(row)"
+                  (keydown.space)="$event.stopPropagation(); editRow(row)"
+                  aria-label="Edit this record"
+                >
+                  <div class="action-content">
+                    <mat-icon class="action-icon primary-icon">edit_note</mat-icon>
+                    <div class="action-text">
+                      <span class="action-label">Edit Record</span>
+                      <span class="action-description">Modify this entry</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Custom Actions Group -->
+              <div class="action-section custom-section" *ngIf="actionItems.length > 0">
+                <ng-container *ngFor="let action of actionItems; let i = index">
+                  <button
+                    mat-menu-item
+                    class="corporate-menu-item custom-action"
+                    [disabled]="isActionDisabled(action, row)"
+                    *ngIf="isActionVisible(action, row)"
+                    (click)="$event.stopPropagation(); handleAction(action, row)"
+                    (keydown.enter)="$event.stopPropagation(); handleAction(action, row)"
+                    (keydown.space)="$event.stopPropagation(); handleAction(action, row)"
+                    [ngClass]="getActionClass(action, row)"
+                    [attr.aria-label]="getActionLabel(action, row) + ' for this record'"
+                  >
+                    <div class="action-content">
+                      <mat-icon
+                        class="action-icon"
+                        [ngClass]="getActionIconClass(action, row)"
+                        aria-hidden="false"
+                        [attr.aria-label]="getActionLabel(action, row) + ' icon'"
+                        >{{ getActionIcon(action, row) }}</mat-icon
+                      >
+                      <div class="action-text">
+                        <span class="action-label">{{ getActionLabel(action, row) }}</span>
+                        <span class="action-description" *ngIf="action.description">{{
+                          action.description
+                        }}</span>
+                      </div>
+                    </div>
+                  </button>
+                </ng-container>
+              </div>
+
+              <!-- Danger Actions Group -->
+              <div class="action-section danger-section" *ngIf="deleteEndpoint">
+                <div class="section-divider"></div>
+                <button
+                  mat-menu-item
+                  class="corporate-menu-item delete-action"
+                  (click)="$event.stopPropagation(); deleteRow(row)"
+                  (keydown.enter)="$event.stopPropagation(); deleteRow(row)"
+                  (keydown.space)="$event.stopPropagation(); deleteRow(row)"
+                  [disabled]="config.disableDeleteFn?.(row)"
+                  aria-label="Delete this record permanently"
+                >
+                  <div class="action-content">
+                    <mat-icon class="action-icon danger-icon">delete_outline</mat-icon>
+                    <div class="action-text">
+                      <span class="action-label">Delete Record</span>
+                      <span class="action-description">Remove permanently</span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.selected-row]="selection.isSelected(row)"
+      ></tr>
+    </table>
+
+    <!-- Empty state -->
+    <div *ngIf="dataSource.data.length === 0 && !isLoading && !error" class="empty-state">
+      <mat-icon>{{ config.emptyStateConfig?.icon || 'search_off' }}</mat-icon>
+      <h3>{{ config.emptyStateConfig?.title || 'No data found' }}</h3>
+      <p *ngIf="!config.parameters?.['searchString']">
+        {{ config.emptyStateConfig?.message || 'Try adjusting your search or filters' }}
+      </p>
+      <button
+        mat-flat-button
+        class="custom-button"
+        color="primary"
+        *ngIf="(config.showCreateButton ?? false) && !config.parameters?.['searchString']"
+        (click)="renderFormComponent()"
+        (keydown.enter)="renderFormComponent()"
+        (keydown.space)="renderFormComponent()"
+        [attr.aria-label]="'Create new ' + config.componentName"
+      >
+        <mat-icon>add</mat-icon>
+        Create {{ config.componentName }}
+      </button>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading data...</p>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error" class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="refreshData()"
+        (keydown.enter)="refreshData()"
+        (keydown.space)="refreshData()"
+        aria-label="Retry loading data"
+      >
+        Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination-footer">
+    <div class="left-group">
+      <div class="total-count" *ngIf="config.showTotalCount !== false">
+        Total: {{ config.totalCount ?? dataSource.data.length }} rows
+      </div>
+      <span class="selection-count" *ngIf="selection.selected.length > 0">
+        | {{ selection.selected.length }} selected
+      </span>
+    </div>
+    <mat-paginator
+      *ngIf="config.showPaginator !== false"
+      [length]="config.totalCount ?? dataSource.data.length"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage - 1"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </div>
+</div>

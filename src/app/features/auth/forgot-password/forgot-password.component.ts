@@ -6,17 +6,42 @@ import { Router, RouterLink } from '@angular/router';
   selector: 'app-forgot-password',
   imports: [ReactiveFormsModule, RouterLink],
   template: `
-    <h2>Forgot Password</h2>
-    <p class="description">
-      Enter your email address and we'll send you a link to reset your password.
-    </p>
+    <div class="mb-5">
+      <h2
+        class="text-[20px] font-semibold mb-1"
+        style="color: var(--text-primary); letter-spacing: -0.02em"
+      >
+        Forgot password?
+      </h2>
+      <p class="text-[13px]" style="color: var(--text-muted)">
+        Enter your email and we'll send a reset link
+      </p>
+    </div>
 
-    <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Email -->
+      <div>
+        <label for="email" class="input-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          class="input w-full"
+          [class.input-error]="
+            forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched
+          "
+          [attr.aria-invalid]="
+            forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched
+          "
+          [attr.aria-describedby]="
+            forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched
+              ? 'forgot-email-error'
+              : null
+          "
+        />
         @if (forgotPasswordForm.get('email')?.invalid && forgotPasswordForm.get('email')?.touched) {
-          <div class="error-message">
+          <div id="forgot-email-error" class="input-error-text" role="alert">
             @if (forgotPasswordForm.get('email')?.errors?.['required']) {
               <span>Email is required</span>
             }
@@ -27,89 +52,45 @@ import { Router, RouterLink } from '@angular/router';
         }
       </div>
 
-      <button type="submit" [disabled]="forgotPasswordForm.invalid">Send Reset Link</button>
+      <!-- Submit -->
+      <button
+        type="submit"
+        [disabled]="forgotPasswordForm.invalid"
+        class="btn btn-primary w-full"
+        style="height: 42px; font-size: 14px; font-weight: 600"
+      >
+        Send Reset Link
+      </button>
 
-      <div class="auth-links">
-        <p>
-          <a [routerLink]="['/auth/login']">Back to Login</a>
-        </p>
-      </div>
+      <!-- Back to Login -->
+      <p class="text-center">
+        <a
+          [routerLink]="['/auth/login']"
+          class="text-[13px] font-medium"
+          style="color: var(--primary-light)"
+          >Back to sign in</a
+        >
+      </p>
     </form>
 
     @if (submitted) {
-      <div class="success-message">
-        <p>We've sent a password reset link to your email address.</p>
-        <p>Please check your inbox and follow the instructions to reset your password.</p>
+      <div
+        class="mt-4 p-4 rounded-btn border"
+        style="background: var(--success-50); border-color: var(--success-200)"
+      >
+        <p class="text-body text-center" style="color: var(--success-700)">
+          We've sent a password reset link to your email address.
+        </p>
+        <p class="text-caption text-center mt-1" style="color: var(--success-700)">
+          Please check your inbox and follow the instructions.
+        </p>
       </div>
     }
   `,
   styles: [
     `
-      h2 {
-        text-align: center;
-        margin-bottom: 16px;
-      }
-      .description {
-        text-align: center;
-        margin-bottom: 24px;
-        color: #666;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-      .form-group {
-        margin-bottom: 16px;
-      }
-      label {
+      :host {
         display: block;
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
-      input[type='email'] {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 16px;
-      }
-      .error-message {
-        color: #dc3545;
-        font-size: 14px;
-        margin-top: 4px;
-      }
-      button {
-        background-color: #3f51b5;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        padding: 12px;
-        font-size: 16px;
-        cursor: pointer;
-        margin-bottom: 16px;
-      }
-      button:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-      }
-      .auth-links {
-        text-align: center;
-        margin-bottom: 16px;
-      }
-      .auth-links a {
-        color: #3f51b5;
-        text-decoration: none;
-      }
-      .success-message {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 16px;
-        border-radius: 4px;
-        margin-top: 16px;
-        text-align: center;
-      }
-      .success-message p {
-        margin: 8px 0;
       }
     `
   ]
@@ -128,16 +109,9 @@ export class ForgotPasswordComponent {
 
   public onSubmit(): void {
     if (this.forgotPasswordForm.valid) {
-      // In a real app, this would call an authentication service
-      // Forgot password request submitted
-
-      // Show success message
       this.submitted = true;
-
-      // Hide the form
       this.forgotPasswordForm.disable();
 
-      // In a real app, you might redirect after a delay
       setTimeout(() => {
         this._router.navigate(['/auth/login']);
       }, 5000);
