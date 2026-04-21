@@ -113,6 +113,42 @@
     "settings": "Settings",
     "logout": "Log Out"
   },
+  "commandPalette": {
+    "placeholder": "Search pages, sections, and actions...",
+    "empty": "No matches. Try a different search.",
+    "navigate": "navigate",
+    "select": "select",
+    "results": "results"
+  },
+  "header": {
+    "toggleSidebar": "Toggle sidebar",
+    "search": "Search",
+    "searchPlaceholder": "Search or jump to...",
+    "notifications": "Notifications",
+    "noNotifications": "You're all caught up.",
+    "markAllRead": "Mark all as read",
+    "viewAllNotifications": "View all notifications",
+    "userMenu": "Open user menu",
+    "profile": "Profile",
+    "accountSettings": "Account settings",
+    "help": "Help & support",
+    "signOut": "Sign out"
+  },
+  "sidebar": {
+    "sections": {
+      "operations": "Operations",
+      "administration": "Administration",
+      "analytics": "Analytics"
+    },
+    "loadError": "Could not load navigation.",
+    "retry": "Retry",
+    "toggle": "Toggle",
+    "navigateTo": "Navigate to",
+    "closeSidebar": "Close sidebar",
+    "logoutTitle": "Sign out?",
+    "logoutMessage": "You will be returned to the login screen.",
+    "logoutConfirm": "Sign out"
+  },
   "notFound": {
     "title": "Page Not Found",
     "message": "The page you are looking for does not exist or has been moved.",

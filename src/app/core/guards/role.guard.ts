@@ -10,19 +10,16 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
     const router = inject(Router);
     const toastService = inject(ToastService);
 
-    return authService.userRoles$.pipe(
+    return authService.authState$.pipe(
       take(1),
-      map(userRoles => {
-        // Check if user has any of the required roles
+      map(() => {
+        const userRoles = authService.getUserRoles();
         const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
 
         if (hasRequiredRole) {
           return true;
         } else {
-          // Show access denied message
           toastService.showError('Access denied. You do not have the required permissions.');
-
-          // Redirect to home or dashboard
           return router.createUrlTree(['/dashboard']);
         }
       })
