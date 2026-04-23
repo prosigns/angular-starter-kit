@@ -150,9 +150,12 @@
     "logoutConfirm": "Sign out"
   },
   "notFound": {
-    "title": "Page Not Found",
-    "message": "The page you are looking for does not exist or has been moved.",
-    "backToHome": "Go to Homepage",
+    "eyebrow": "Under Development",
+    "title": "This page is under development",
+    "message": "Our team is actively building this area of CareTrack. It will be available in an upcoming release — thank you for your patience.",
+    "requestedPath": "Requested",
+    "goBack": "Go Back",
+    "backToHome": "Go to Dashboard",
     "contactSupport": "Contact Support"
   },
   "footer": {

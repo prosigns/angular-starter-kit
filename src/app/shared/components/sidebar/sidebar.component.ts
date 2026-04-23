@@ -301,7 +301,7 @@ export class SidebarComponent implements OnInit {
         this.cdr.markForCheck();
         break;
       case 'back-to-main':
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/system/dashboard']);
         break;
     }
   }
