@@ -20,7 +20,7 @@ export const roleGuard = (requiredRoles: string[]): CanActivateFn => {
           return true;
         } else {
           toastService.showError('Access denied. You do not have the required permissions.');
-          return router.createUrlTree(['/dashboard']);
+          return router.createUrlTree(['/system/dashboard']);
         }
       })
     );

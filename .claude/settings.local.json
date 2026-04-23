@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(grep -oP \"\\(error|warning\\)\\\\s+\\\\S+$\")",
+      "Bash(ls \"d:/Workspace/CareTrack/caretrack-web/tailwind.config\"*)",
+      "Bash(ls \"d:/Workspace/CareTrack/caretrack-web/postcss.config\"*)",
+      "Bash(npm install:*)",
+      "Bash(wc -l d:/Workspace/CareTrack/caretrack-web/src/app/core/services/*.ts)",
+      "Bash(npx ng:*)",
+      "Bash(timeout 15 bash -c 'while ! curl -s http://localhost:4200 > /dev/null 2>&1; do sleep 1; done; echo \"Server is up on http://localhost:4200\"')",
+      "Bash(sed -i 's/private httpService/private _httpService/g; s/this\\\\.httpService\\\\b/this._httpService/g; s/private outsideClickService/private _outsideClickService/g; s/this\\\\.outsideClickService\\\\b/this._outsideClickService/g; s/private destroy\\\\$/private _destroy$/g; s/this\\\\.destroy\\\\$/this._destroy$/g; s/private searchSubject/private _searchSubject/g; s/this\\\\.searchSubject\\\\b/this._searchSubject/g; s/private outsideClickUnsubscribe/private _outsideClickUnsubscribe/g; s/this\\\\.outsideClickUnsubscribe\\\\b/this._outsideClickUnsubscribe/g' src/app/shared/components/dropdown/dropdown.component.ts)",
+      "Bash(sed -i 's/private onChange/private _onChange/g; s/this\\\\.onChange\\\\b/this._onChange/g; s/private onTouched/private _onTouched/g; s/this\\\\.onTouched\\\\b/this._onTouched/g; s/private initializeConfig/private _initializeConfig/g; s/this\\\\.initializeConfig/this._initializeConfig/g; s/private initializeOptions/private _initializeOptions/g; s/this\\\\.initializeOptions/this._initializeOptions/g; s/private setupSearch/private _setupSearch/g; s/this\\\\.setupSearch/this._setupSearch/g; s/private setupClickOutside/private _setupClickOutside/g; s/this\\\\.setupClickOutside/this._setupClickOutside/g; s/private fetchOptions/private _fetchOptions/g; s/this\\\\.fetchOptions/this._fetchOptions/g; s/private resolveModuleAndEndpoint/private _resolveModuleAndEndpoint/g; s/this\\\\.resolveModuleAndEndpoint/this._resolveModuleAndEndpoint/g; s/private filterOptions/private _filterOptions/g; s/this\\\\.filterOptions/this._filterOptions/g; s/private setDropdownDirection/private _setDropdownDirection/g; s/this\\\\.setDropdownDirection/this._setDropdownDirection/g; s/private updatePanelPosition/private _updatePanelPosition/g; s/this\\\\.updatePanelPosition/this._updatePanelPosition/g; s/private navigateOptions/private _navigateOptions/g; s/this\\\\.navigateOptions/this._navigateOptions/g' src/app/shared/components/dropdown/dropdown.component.ts)",
+      "Bash(npx tsc *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git rm *)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //F //PID 31144)",
+      "Bash(grep -E \"features/system/tenants|features/system/tenants\\\\\\\\\\\\\\\\\")"
+    ]
+  }
+}

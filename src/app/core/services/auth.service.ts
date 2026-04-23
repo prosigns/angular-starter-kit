@@ -10,7 +10,6 @@ import { ApiModuleEnum } from '../enums/api-modules.enum';
 export interface ILoginRequest {
   email: string;
   password: string;
-  isMobile: boolean;
   deviceId: string;
   deviceModel: string;
   osVersion: string;

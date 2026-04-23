@@ -628,7 +628,7 @@ export class HeaderComponent {
       (u.userName || u.email || '?').charAt(0).toUpperCase();
     const displayName =
       [first, last].filter(Boolean).join(' ') || u.userName || u.email || 'User';
-    const role = u.roles?.[0]?.displayName ?? '';
+    const role = this.formatRoleLabel(u.roles?.[0]?.displayName ?? '');
     return {
       initials,
       displayName,
@@ -636,6 +636,16 @@ export class HeaderComponent {
       role,
       avatarUrl: u.imageUrl || null
     };
+  }
+
+  private formatRoleLabel(value: string): string {
+    if (!value) return '';
+    return value
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   private detectShortcutLabel(): string {
