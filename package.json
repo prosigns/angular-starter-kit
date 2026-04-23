@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:prod": "ng build --configuration production",
-    "build:staging": "ng build --configuration staging",
+    "start": "node init && ng serve",
+    "build": "node init && ng build",
+    "build:prod": "node init && ng build --configuration production",
+    "build:staging": "node init && ng build --configuration staging",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless",
@@ -16,7 +16,7 @@
     "update": "ng update",
     "analyze": "ng build --stats-json && webpack-bundle-analyzer dist/angular-starter-kit/browser/stats.json",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "node init && storybook build"
   },
   "private": true,
   "dependencies": {

@@ -170,7 +170,6 @@ export class LoginComponent {
       const payload: ILoginRequest = {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password,
-        isMobile: false,
         deviceId: '',
         deviceModel: '',
         osVersion: '',
@@ -187,7 +186,7 @@ export class LoginComponent {
 
       this._authService.login(payload).subscribe({
         next: () => {
-          this._router.navigate(['/dashboard']);
+          this._router.navigate(['/system/dashboard']);
         },
         error: () => {
           this.isLoading = false;

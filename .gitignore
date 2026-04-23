@@ -33,9 +33,8 @@ testem.log
 /typings
 
 # Environment variables
-.env
-.env.*
 
 # System files
 .DS_Store
 Thumbs.db
+config.bat

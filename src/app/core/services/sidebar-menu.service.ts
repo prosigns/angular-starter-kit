@@ -28,7 +28,7 @@ export type MenuLoadState = 'idle' | 'loading' | 'ready' | 'error';
 
 const STORAGE_KEYS = {
   collapsed: 'ct.sidebar.collapsed.v1',
-  menuConfig: 'ct.sidebar.menu-config.v3'
+  menuConfig: 'ct.sidebar.menu-config.v6'
 } as const;
 
 const MOBILE_BREAKPOINT_PX = 1024;
@@ -195,4 +195,5 @@ export class SidebarMenuService {
       children: item.children ? this.initializeMenuItems(item.children) : undefined
     }));
   }
+
 }
