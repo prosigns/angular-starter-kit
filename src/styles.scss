@@ -5,6 +5,8 @@
 
 /* CareTrack Enterprise Design Tokens */
 :root {
+  color-scheme: light;
+
   /* Primary — Enterprise Healthcare Blue */
   --primary: #1E40AF;
   --primary-light: #3B82F6;
@@ -175,6 +177,19 @@ button {
 input, select, textarea, button {
   font-family: inherit;
   font-size: 14px;
+}
+
+/* Native control backgrounds — prevent OS dark-mode leakage */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="submit"]):not([type="button"]):not([type="reset"]),
+select,
+textarea {
+  background-color: #FFFFFF;
+  color: var(--text-primary);
+}
+
+select option {
+  background-color: #FFFFFF;
+  color: var(--text-primary);
 }
 
 input:focus,
@@ -391,4 +406,55 @@ textarea:focus {
 *:focus-visible {
   outline: 2px solid var(--focus-ring-color);
   outline-offset: 2px;
+}
+
+/* Scrollbar — Corporate / Enterprise */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--border-strong);
+  border: 2px solid var(--bg-body);
+  border-radius: 9999px;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--neutral);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: var(--text-secondary);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark surfaces (sidebar) — invert track edge so thumb reads on #0F172A */
+.sidebar *::-webkit-scrollbar-thumb,
+[data-scrollbar="dark"] *::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.25);
+  border-color: var(--sidebar-bg);
+}
+
+.sidebar *::-webkit-scrollbar-thumb:hover,
+[data-scrollbar="dark"] *::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(203, 213, 225, 0.45);
+}
+
+.sidebar *,
+[data-scrollbar="dark"] * {
+  scrollbar-color: rgba(203, 213, 225, 0.25) transparent;
 }
